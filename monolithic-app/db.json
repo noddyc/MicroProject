@@ -1,0 +1,103 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "username": "marceline",
+        "name": "Marceline Abadeer",
+        "bio": "1000 year old vampire queen, musician"
+      },
+      {
+        "id": 2,
+        "username": "finn",
+        "name": "Finn 'the Human' Mertens",
+        "bio": "Adventurer and hero, last human, defender of good"
+      },
+      {
+        "id": 3,
+        "username": "pb",
+        "name": "Bonnibel Bubblegum",
+        "bio": "Scientist, bearer of candy power, ruler of the candy kingdom"
+      },
+      {
+        "id": 4,
+        "username": "jake",
+        "name": "Jake the Dog",
+        "bio": "Former criminal, now magical dog adventurer, and father"
+      }
+    ],
+  
+    "threads": [
+      {
+        "id": 1,
+        "title": "Vacation Spots",
+        "createdBy": 4
+      },
+      {
+        "id": 2,
+        "title": "Favorite Hobbies",
+        "createdBy": 3
+      },
+      {
+        "id": 3,
+        "title": "Lost and Found",
+        "createdBy": 1
+      }
+    ],
+  
+    "posts": [
+      {
+        "id": 1,
+        "thread": 1,
+        "text": "Hawaii is a great place to surf. I highly reccomend it.",
+        "user": 4
+      },
+      {
+        "id": 2,
+        "thread": 2,
+        "text": "My favorite hobby is playing video games.",
+        "user": 2
+      },
+      {
+        "id": 3,
+        "thread": 2,
+        "text": "I like to play drums. Anybody else like it?",
+        "user": 3
+      },
+      {
+        "id": 4,
+        "thread": 3,
+        "text": "I found a wallet. DM me if you lost one recently.",
+        "user": 2
+      },
+      {
+        "id": 5,
+        "thread": 3,
+        "text": "I found an iPhone 12 with a blue case. DM me if it's yours.",
+        "user": 1
+      },
+      {
+        "id": 6,
+        "thread": 1,
+        "text": "I visted Denmark, the happiest country in the world!",
+        "user": 1
+      }
+    ],
+
+    "comments": [
+      {
+        "post": 4,
+        "text": "You are a lifesaver. Thank you so much!!",
+        "user": 1
+      },
+      {
+        "post": 2,
+        "text": "Nice! I like playing video games too.",
+        "user": 4
+      },
+      {
+        "post": 6,
+        "text": "Sounds interesting, I'd like to learn more!",
+        "user": 2
+      }
+    ]
+  }
