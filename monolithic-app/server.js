@@ -54,3 +54,4 @@ app.get('/api/comments/in-post/:postId', function(req, res){
 });
 
 app.listen(3000);
+console.log("world")
