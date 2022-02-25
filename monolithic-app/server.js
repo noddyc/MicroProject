@@ -1,5 +1,3 @@
-var testing = 1;
-    
 var express = require('express');
 const db = require('./db.json');
 var app = express();
