@@ -4,7 +4,7 @@ pipeline{
     
     environment{
         dockerImage = ''
-        registry = 'jh7939/firstimage' 
+        registry = 'jh7939/firstimage:1014' 
         registryCredential = 'dockerhub_id'
     }
     
