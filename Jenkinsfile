@@ -4,7 +4,7 @@ pipeline{
     
     environment{
         dockerImage = ''
-        registry = 'jh7939/monolithic:nodejs' 
+        registry = 'jh7939/firstimage' 
         registryCredential = 'dockerhub_id'
     }
     
