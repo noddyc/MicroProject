@@ -31,14 +31,14 @@ pipeline{
             }
         }
         
-//         stage("Uploading Image"){
-//             steps{
-//                 script{
-//                         docker.withRegistry('', registryCredential){
-//                             dockerImage.push()
-//                     }
-//                 }
-//             }
-//         }
+        stage("Uploading Image"){
+            steps{
+                script{
+                        docker.withRegistry('', registryCredential){
+                            dockerImage.push()
+                    }
+                }
+            }
+        }
     }
 }
