@@ -12,39 +12,40 @@ pipeline{
         stage('Checkout'){
             steps{
 //                 checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'haproxy/']]]], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
-                checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/test']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: 'haproxy/'
-                        ]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
+//                 checkout([
+//                         $class: 'GitSCM',
+//                         branches: [[name: '*/test']],
+//                         doGenerateSubmoduleConfigurations: false,
+//                         extensions: [[
+//                             $class: 'RelativeTargetDirectory',
+//                             relativeTargetDir: 'haproxy/'
+//                         ]],
+//                         submoduleCfg: [],
+//                         userRemoteConfigs: [[
   
-                            url: 'https://github.com/noddyc/MicroProject'
-                        ]]
-                    ])
+//                             url: 'https://github.com/noddyc/MicroProject'
+//                         ]]
+//                     ])
+                sh 'pwd'
           
             }
         }
-        stage('Build Docker image'){
-            steps{
-                script{
-                    dockerImage = docker.build registry
-                }
-            }
-        }
+//         stage('Build Docker image'){
+//             steps{
+//                 script{
+//                     dockerImage = docker.build registry
+//                 }
+//             }
+//         }
         
-        stage("Uploading Image"){
-            steps{
-                script{
-                        docker.withRegistry('', registryCredential){
-                            dockerImage.push()
-                    }
-                }
-            }
-        }
+//         stage("Uploading Image"){
+//             steps{
+//                 script{
+//                         docker.withRegistry('', registryCredential){
+//                             dockerImage.push()
+//                     }
+//                 }
+//             }
+//         }
     }
 }
