@@ -16,12 +16,6 @@ pipeline{
                 
             }
         }
-        stage('changedir'){
-            steps{
-                dir('haproxy'){
-                }
-            }
-        }
         stage('Build Docker image'){
             steps{
                 script{
