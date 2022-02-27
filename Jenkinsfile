@@ -19,10 +19,7 @@ pipeline{
         stage('Build Docker image'){
             steps{
                 script{
-                    sh 'ls'
-                    sh 'cd .'
-                    sh 'pwd'
-                    sh 'ls'
+                    sh 'cd haproxy'
                     dockerImage = docker.build registry
                 }
             }
