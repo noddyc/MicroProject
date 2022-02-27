@@ -18,7 +18,7 @@ pipeline{
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: '/haproxy'
+                            relativeTargetDir: 'haproxy/'
                         ]],
                         submoduleCfg: [],
                         userRemoteConfigs: [[
