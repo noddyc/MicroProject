@@ -11,14 +11,15 @@ pipeline{
     stages{
         stage('Checkout'){
             steps{
-//                 checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'LocalBranch', localBranch: 'haproxy']], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
-                checkout([$class: 'GitSCM', branches: [[name: '*/test']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'haproxy/']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+ 
           
             }
         }
         stage('Build Docker image'){
             steps{
                 script{
+                    sh 'ls'
                     dockerImage = docker.build registry
                 }
             }
