@@ -20,6 +20,7 @@ pipeline{
             steps{
                 script{
                     sh 'cd haproxy'
+                    sh 'cd haproxy'
                     sh 'ls'
                     dockerImage = docker.build registry
                 }
