@@ -14,11 +14,11 @@ pipeline{
 //                 checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'haproxy/']]]], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
                 checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "*/test"]],
+                        branches: [[name: '*/test']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "haproxy"
+                            relativeTargetDir: '/haproxy'
                         ]],
                         submoduleCfg: [],
                         userRemoteConfigs: [[
