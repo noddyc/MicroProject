@@ -11,7 +11,9 @@ pipeline{
     stages{
         stage('Checkout'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/tools']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                dir('haproxy'){
+                    checkout([$class: 'GitSCM', branches: [[name: '*/tools']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                }
             }
         }
         stage('Build Docker image'){
