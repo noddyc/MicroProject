@@ -16,13 +16,13 @@ pipeline{
           
             }
         }
-//         stage('Build Docker image'){
-//             steps{
-//                 script{
-//                     dockerImage = docker.build registry
-//                 }
-//             }
-//         }
+        stage('Build Docker image'){
+            steps{
+                script{
+                    dockerImage = docker.build registry
+                }
+            }
+        }
         
 //         stage("Uploading Image"){
 //             steps{
