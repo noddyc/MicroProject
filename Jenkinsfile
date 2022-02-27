@@ -22,7 +22,10 @@ pipeline{
 //                     sh 'cd haproxy'
 //                     sh 'cd haproxy'
 //                     sh 'ls'
-                       sh 'docker build -t jh7939/monolithic:haproxy ./haproxy'
+                    dir(./haproxy){
+                        dockerImage = docker.build registry
+                     }
+//                        sh 'docker build -t jh7939/monolithic:haproxy ./haproxy'
 //                     dockerImage = docker.build registry
                 }
             }
