@@ -21,6 +21,7 @@ pipeline{
                 script{
                     sh 'ls'
                     sh 'cd .'
+                    sh 'pwd'
                     sh 'ls'
                     dockerImage = docker.build registry
                 }
