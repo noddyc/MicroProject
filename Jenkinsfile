@@ -11,7 +11,21 @@ pipeline{
     stages{
         stage('Checkout'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'haproxy/']]]], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+//                 checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'haproxy/']]]], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "test"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "/haproxy"
+                        ]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[
+  
+                            url: 'https://github.com/noddyc/MicroProject'
+                        ]]
+                    ])
           
             }
         }
