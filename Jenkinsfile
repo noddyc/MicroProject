@@ -4,7 +4,7 @@ pipeline{
     
     environment{
         dockerImage = ''
-        registry = 'jh7939/monolithic:haproxy' 
+        registry = 'jh7939/firstimage:monolithic-app' 
         registryCredential = 'dockerhub_id'
     }
     
