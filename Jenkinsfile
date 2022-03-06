@@ -17,7 +17,7 @@ pipeline{
         }
         stage('Build Docker image'){
             when {
-                changeset "haproxy"
+                changeset "haproxy/*"
             }
             steps{
                 script{
@@ -35,7 +35,7 @@ pipeline{
         
         stage("Uploading Image"){
             when {
-                changeset "haproxy"
+                changeset "haproxy/*"
             }
             steps{
                 script{
