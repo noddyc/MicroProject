@@ -11,11 +11,14 @@ pipeline{
     stages{
         stage('Checkout'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [[$class: 'PathRestriction', excludedRegions: '', includedRegions: 'haproxy']], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+               checkout([$class: 'GitSCM', branches: [[name: '*/test']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
       
             }
         }
         stage('Build Docker image'){
+            when {
+                changeset "haproxy"
+            }
             steps{
                 script{
 //                     sh 'cd haproxy'
@@ -31,6 +34,9 @@ pipeline{
         }
         
         stage("Uploading Image"){
+            when {
+                changeset "haproxy"
+            }
             steps{
                 script{
                         docker.withRegistry('', registryCredential){
