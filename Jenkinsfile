@@ -136,40 +136,40 @@ pipeline{
                 }
             }
         }
-        // stage('Microservice task (modified)'){
-        //     steps{
-        //         script{
-        //             try{
-        //                 if(env.folders != '' ){
-        //                     dir("./microservices"){
-        //                         flag = "edit"
-        //                         sh "bash sshlogin.sh ${env.folders} ${flag}" 
-        //                     }
-        //                 }
-        //             }catch(Exception e){
-        //                     echo "Microservice task (modified) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('Microservice task (add)'){
-        //     steps{
-        //         script{
-        //             try{
-        //                 if(env.folders_new != ''){
-        //                     dir("./microservices"){
-        //                         flag_new = "new"
-        //                         sh "bash sshlogin.sh ${env.folders_new} ${flag_new}" 
-        //                     }
-        //                 }
-        //             }catch(Exception e){
-        //                     echo "Microservice task (add) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Microservice task (modified)'){
+            steps{
+                script{
+                    try{
+                        if(env.folders != '' ){
+                            dir("./microservices"){
+                                flag = "edit"
+                                sh "bash helper.sh ${env.folders} ${flag}" 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (modified) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+        stage('Microservice task (add)'){
+            steps{
+                script{
+                    try{
+                        if(env.folders_new != ''){
+                            dir("./microservices"){
+                                flag_new = "new"
+                                sh "bash helper.sh ${env.folders_new} ${flag_new}" 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (add) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
         // stage('Monolithic detect changes, build ,and push images'){
         //     when{
         //         changeset "monolithic-app/*"
