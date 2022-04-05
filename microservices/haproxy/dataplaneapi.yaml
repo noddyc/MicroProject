@@ -1,0 +1,22 @@
+config_version: 2
+name: haproxy1
+mode: single
+status: ""
+
+dataplaneapi:
+  host: "0.0.0.0"
+  port: 5555
+  user:
+  - name: "admin"
+    insecure: true
+    password: "mypassword"
+  transaction:
+    transaction_dir: "/tmp/haproxy"
+
+haproxy:
+  config_file: "/usr/local/etc/haproxy/haproxy.cfg"
+  haproxy_bin: "/usr/sbin/haproxy"
+  reload:
+    reload_cmd: "service haproxy reload"
+    restart_cmd: "service haproxy restart"
+    reload_delay: 5

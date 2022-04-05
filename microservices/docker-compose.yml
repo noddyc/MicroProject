@@ -1,0 +1,61 @@
+version: "3.9"
+services:
+  users:
+    image: jh7939/microservices:users_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/users || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  threads:
+    image: jh7939/microservices:threads_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/threads || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  posts:
+    image: jh7939/microservices:posts_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/posts || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  comments:
+    image: jh7939/microservices:comments_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/comments || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  newservice:
+    image: jh7939/microservices:newservice_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/newservice%7C%7C exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  newservice5:
+    image: jh7939/microservices:newservice5_microservice
+    healthcheck:
+      test: curl --fail http://localhost/api/newservice5%7C%7C exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  haproxy:
+    image: jh7939/microservices:haproxy
+    ports:
+      - "80:80"
+      - "8404:8404"
+      - "5555:5555"
+    volumes:
+      - "./haproxy:/usr/local/etc/haproxy:rw"
+networks:
+  default:
+    driver: bridge

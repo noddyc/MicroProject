@@ -1,0 +1,19 @@
+{
+    "threads": [
+        {
+          "id": 1,
+          "title": "Vacation Spots",
+          "createdBy": 4
+        },
+        {
+          "id": 2,
+          "title": "Favorite Hobbies",
+          "createdBy": 3
+        },
+        {
+          "id": 8112121,
+          "title": "Lost and Foundct",
+          "createdBy": 1
+        }
+      ]
+}

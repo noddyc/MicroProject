@@ -1,0 +1,55 @@
+Replace the transaction id with the one you get from 1.
+
+1. Create a transaction and obtain the transaction_ID
+curl --location --user admin:mypassword --request POST 'http://localhost:5555/v2/services/haproxy/transactions?version=6'
+
+2. Create a new backend
+curl --location --user admin:mypassword --request POST 'http://localhost:5555/v2/services/haproxy/configuration/backends?transaction_id=f62003be-fefc-4382-81ec-59cbb15b29ee' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name": "be_newservice", "balance": {"algorithm":"roundrobin"}, "httpchk": {"method": "HEAD", "uri": "/", "version": "HTTP/1.1"}}'
+
+3. Add server template to backend
+curl --location --user admin:mypassword --request POST 'http://localhost:5555/v2/services/haproxy/configuration/server_templates?backend=be_newservice&transaction_id=f62003be-fefc-4382-81ec-59cbb15b29ee' \
+--header 'Authorization: Basic YWRtaW46bXlwYXNzd29yZA==' \
+--header 'Content-Type: application/json' \
+--data-raw '
+{
+    "check": "enabled",
+    "fqdn": "newservice",
+    "init-addr": "libc,none",
+    "num_or_range": "20",
+    "port": 3000,
+    "prefix": "microservices-newservice-",
+    "proxy-v2-options": null,
+    "resolvers": "docker"
+}'
+
+4.  Add the ACL to the frontend
+curl --location --user admin:mypassword --request POST 'http://localhost:5555/v2/services/haproxy/configuration/acls?parent_name=api_gateway&parent_type=frontend&transaction_id=f62003be-fefc-4382-81ec-59cbb15b29ee' \
+--header 'Authorization: Basic YWRtaW46bXlwYXNzd29yZA==' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "acl_name": "PATH_newservice",
+    "criterion": "path_beg",
+    "index": 0,
+    "value": "-i /api/newservice"
+}'
+
+5. Add user_backend to frontend
+curl --location --request POST 'http://localhost:5555/v2/services/haproxy/configuration/backend_switching_rules?frontend=api_gateway&transaction_id=f62003be-fefc-4382-81ec-59cbb15b29ee' \
+--user admin:mypassword \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "cond": "if",
+    "cond_test": "PATH_newservice",
+    "index": 0,
+    "name": "be_newservice"
+}'
+6. Commit the transaction.
+curl --location --user admin:mypassword --request PUT 'http://localhost:5555/v2/services/haproxy/transactions/f62003be-fefc-4382-81ec-59cbb15b29ee' \
+--header 'Content-Type: application/json'
+
+
+
+
+

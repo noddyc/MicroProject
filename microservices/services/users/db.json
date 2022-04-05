@@ -1,0 +1,22 @@
+{
+    "users": [
+        {
+          "id": 1,
+          "username": "marceline",
+          "name": "Marceline Abadeer",
+          "bio": "1000 year old vampire queen, musician"
+        },
+        {
+          "id": 22121212,
+          "username": "finn",
+          "name": "Finn 'the Human' Mertens",
+          "bio": "Adventurer and hero, last human, defender of good"
+        },
+        {
+          "id": 11112111,
+          "username": "pb",
+          "name": "Bonnibel Bubblegum",
+          "bio": "Scientist, bearer of candy power, ruler of the cat kingdom doglll"
+        }
+      ]
+}
