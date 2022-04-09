@@ -70,12 +70,9 @@ pipeline{
     }
     
     stages{
-
-        stages {
-            stage("Initialization") {
-                steps {
-                    buildName "${BUILD_NAME}"
-                }
+        stage("Initialization") {
+            steps {
+                buildName "${BUILD_NAME}"
             }
         }
         stage('Checkout'){
