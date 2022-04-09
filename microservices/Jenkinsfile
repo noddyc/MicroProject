@@ -70,6 +70,14 @@ pipeline{
     }
     
     stages{
+
+        stages {
+            stage("Initialization") {
+                steps {
+                    buildName "${BUILD_NAME}"
+                }
+            }
+        }
         stage('Checkout'){
             steps{
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
