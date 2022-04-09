@@ -1,0 +1,31 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@813.vb_d7c3d2984a_0">
+  <node class="cps.n.StepAtomNode" plugin="workflow-cps@2659.v52d3de6044d0">
+    <parentIds>
+      <string>23</string>
+    </parentIds>
+    <id>24</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.steps.EchoStep</descriptorId>
+  </node>
+  <actions>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2659.v52d3de6044d0">
+      <arguments>
+        <entry>
+          <string>message</string>
+          <string>Git committer email: total 24
+-rw-r--r--   1 jianhe  staff  8039 Mar 18 23:28 Jenkinsfile
+-rw-r--r--   1 jianhe  staff   226 Mar 18 23:27 README.md
+drwxr-xr-x   8 jianhe  staff   256 Mar 18 23:27 microservices
+drwxr-xr-x   2 jianhe  staff    64 Mar 18 23:31 microservices@tmp
+drwxr-xr-x  11 jianhe  staff   352 Mar 14 17:04 monolithic-app</string>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@1138.v619fd5201b_2f">
+      <startTime>1647660713940</startTime>
+    </wf.a.TimingAction>
+    <s.a.LogStorageAction/>
+  </actions>
+</Tag>

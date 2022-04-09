@@ -1,0 +1,32 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@813.vb_d7c3d2984a_0">
+  <node class="cps.n.StepStartNode" plugin="workflow-cps@2659.v52d3de6044d0">
+    <parentIds>
+      <string>9</string>
+    </parentIds>
+    <id>10</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.steps.EnvStep</descriptorId>
+  </node>
+  <actions>
+    <s.a.LogStorageAction/>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2659.v52d3de6044d0">
+      <arguments>
+        <entry>
+          <string>overrides</string>
+          <list>
+            <string>GIT_BRANCH=origin/master</string>
+            <string>GIT_COMMIT=a1b27ea1be6c8c7555c697c2e077bafee3b94434</string>
+            <string>GIT_PREVIOUS_COMMIT=ba824fbcece92c3c89b76b3a0f7395b6cfb16940</string>
+            <string>GIT_PREVIOUS_SUCCESSFUL_COMMIT=ba824fbcece92c3c89b76b3a0f7395b6cfb16940</string>
+            <string>GIT_URL=https://github.com/hxk1633/Microservices-Project</string>
+          </list>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@1138.v619fd5201b_2f">
+      <startTime>1647663240362</startTime>
+    </wf.a.TimingAction>
+  </actions>
+</Tag>

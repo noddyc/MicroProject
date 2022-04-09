@@ -1,4 +1,5 @@
 #!/bin/bash
+
 OLD_CONTAINER=$(docker-compose ps -q $1 | head -$2)
 NUM=$(( $2*2 ))
 echo $NUM

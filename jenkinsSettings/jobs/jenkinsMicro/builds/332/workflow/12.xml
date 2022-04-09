@@ -1,0 +1,35 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@813.vb_d7c3d2984a_0">
+  <node class="cps.n.StepStartNode" plugin="workflow-cps@2659.v52d3de6044d0">
+    <parentIds>
+      <string>11</string>
+    </parentIds>
+    <id>12</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.steps.EnvStep</descriptorId>
+  </node>
+  <actions>
+    <s.a.LogStorageAction/>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2659.v52d3de6044d0">
+      <arguments>
+        <entry>
+          <string>overrides</string>
+          <list>
+            <string>registryCredential=dockerhub_id</string>
+            <string>registry=jh7939/microservices:</string>
+            <string>registry5=jh7939/microservices:my-haproxy</string>
+            <string>dockerImage=</string>
+            <string>registry2=jh7939/microservices:posts_microservice</string>
+            <string>registry1=jh7939/microservices:comments_microservice</string>
+            <string>registry4=jh7939/microservices:users_microservice</string>
+            <string>registry3=jh7939/microservices:threads_microservice</string>
+          </list>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@1138.v619fd5201b_2f">
+      <startTime>1648269111104</startTime>
+    </wf.a.TimingAction>
+  </actions>
+</Tag>

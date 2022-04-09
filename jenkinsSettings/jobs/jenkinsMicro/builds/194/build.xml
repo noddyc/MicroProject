@@ -1,0 +1,323 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-build plugin="workflow-job@1145.v7f2433caa07f">
+  <actions>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause>
+            <userId>jh7939</userId>
+          </hudson.model.Cause_-UserIdCause>
+          <int>1</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <org.jenkinsci.plugins.workflow.libs.LibrariesAction plugin="workflow-cps-global-lib@564.ve62a_4eb_b_e039">
+      <libraries/>
+    </org.jenkinsci.plugins.workflow.libs.LibrariesAction>
+  </actions>
+  <queueId>46</queueId>
+  <timestamp>1648165726568</timestamp>
+  <startTime>1648165726598</startTime>
+  <result>SUCCESS</result>
+  <duration>1258</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <execution class="org.jenkinsci.plugins.workflow.cps.CpsFlowExecution">
+    <result>SUCCESS</result>
+    <script>def loop_func(values){
+    for (int i=0; i&lt;values.size();i++) {
+        echo &quot;values_${i}&quot;
+}
+pipeline{
+    
+    agent any
+    
+    
+    environment{
+        dockerImage = &apos;&apos;
+        registry1 = &apos;jh7939/microservices:comments_microservice&apos; 
+        registry2 = &apos;jh7939/microservices:posts_microservice&apos; 
+        registry3 = &apos;jh7939/microservices:threads_microservice&apos;
+        registry4 = &apos;jh7939/microservices:users_microservice&apos;
+        registry5 = &apos;jh7939/microservices:my-haproxy&apos;
+        registryCredential = &apos;dockerhub_id&apos;
+    }
+    
+    stages{
+        stage(&apos;Checkout&apos;){
+            steps{
+                checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+ 
+          
+            }
+        }
+        stage(&apos;Detect new folder&apos;){
+            steps{
+                script{
+                    dir(&quot;./microservices&quot;){
+                        GIT_COMMIT = sh (
+                            script: &apos;bash helper.sh&apos;,
+                            returnStdout: true
+                        ).trim()
+                        def v = &quot;${GIT_COMMIT}&quot;.split(&apos;\n&apos;)
+                        loop_func(v)
+}
+                    }
+                }
+
+            }
+        }
+        // stage(&apos;Build Docker image&apos;){
+        //     when {
+        //         changeset &quot;microservices/services/comments/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             dir(&apos;./microservices/services/comments&apos;){
+        //                 dockerImage = docker.build registry1
+        //              }
+        //         }
+        //     }
+        // }
+        
+        // stage(&quot;Uploading Image&quot;){
+        //     when {
+        //         changeset &quot;microservices/services/comments/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //                 docker.withRegistry(&apos;&apos;, registryCredential){
+        //                     dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage(&apos;Checkout2&apos;){
+        //     steps{
+        //         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+ 
+          
+        //     }
+        // }
+        // stage(&apos;Build Docker image2&apos;){
+        //     when {
+        //         changeset &quot;microservices/services/posts/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             dir(&apos;./microservices/services/posts&apos;){
+        //                 dockerImage = docker.build registry2
+        //              }
+        //         }
+        //     }
+        // }
+        
+        // stage(&quot;Uploading Image2&quot;){
+            
+        //     when {
+        //         changeset &quot;microservices/services/posts/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //                 docker.withRegistry(&apos;&apos;, registryCredential){
+        //                     dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // stage(&apos;Checkout3&apos;){
+        //     steps{
+        //         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+ 
+          
+        //     }
+        // }
+        // stage(&apos;Build Docker image3&apos;){
+            
+        //     when {
+        //         changeset &quot;microservices/services/threads/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             dir(&apos;./microservices/services/threads&apos;){
+        //                 dockerImage = docker.build registry3
+        //              }
+        //         }
+        //     }
+        // }
+        
+        // stage(&quot;Uploading Image3&quot;){
+            
+        //     when {
+        //         changeset &quot;microservices/services/threads/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //                 docker.withRegistry(&apos;&apos;, registryCredential){
+        //                     dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // stage(&apos;Checkout4&apos;){
+        //     steps{
+        //         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+ 
+          
+        //     }
+        // }
+        // stage(&apos;Build Docker image4&apos;){
+        //     when {
+        //         changeset &quot;microservices/services/users/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             dir(&apos;./microservices/services/users&apos;){
+        //                 dockerImage = docker.build registry4
+        //              }
+        //         }
+        //     }
+        // }
+        
+        // stage(&quot;Uploading Image4&quot;){
+            
+        //     when {
+        //         changeset &quot;microservices/services/users/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //                 docker.withRegistry(&apos;&apos;, registryCredential){
+        //                     dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // stage(&apos;Checkout5&apos;){
+        //     steps{
+        //         checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+          
+        //     }
+        // }
+        // stage(&apos;Build Docker image5&apos;){
+            
+        //     when {
+        //         changeset &quot;microservices/haproxy/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             dir(&apos;./microservices/haproxy&apos;){
+        //                 dockerImage = docker.build registry5
+        //              }
+        //         }
+        //     }
+        // }
+        
+        // stage(&quot;Uploading Image5&quot;){
+            
+        //     when {
+        //         changeset &quot;microservices/haproxy/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //                 docker.withRegistry(&apos;&apos;, registryCredential){
+        //                     dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage(&quot;swap threads containers&quot;){
+        //     when{
+        //             changeset &quot;microservices/services/threads/*&quot;  
+        //         }           
+        //     steps{
+        //         script{
+        //             dir(&quot;./microservices&quot;){
+        //                 sh &apos;bash sshlogin.sh threads&apos;
+        //                 // sh &apos;bash update_containers.sh threads 4&apos;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage(&quot;swap posts containers&quot;){
+        //     when{
+        //             changeset &quot;microservices/services/posts/*&quot;  
+        //         }           
+        //     steps{
+        //         script{
+        //             dir(&quot;./microservices&quot;){
+        //                 sh &apos;bash sshlogin.sh posts&apos;
+        //                 // sh &apos;bash update_containers.sh posts 4&apos;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage(&quot;swap users containers&quot;){
+        //     when{
+        //             changeset &quot;microservices/services/users/*&quot;  
+        //         }           
+        //     steps{
+        //         script{
+        //             dir(&quot;./microservices&quot;){
+        //                 sh &apos;bash sshlogin.sh users&apos;
+        //                 // sh &apos;bash update_containers.sh users 4&apos;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage(&quot;swap comments containers&quot;){
+        //     when{
+        //             changeset &quot;microservices/services/comments/*&quot;  
+        //         }           
+        //     steps{
+        //         script{
+        //             dir(&quot;./microservices&quot;){
+        //                 sh &apos;bash sshlogin.sh comments&apos;
+        //                 // sh &apos;bash update_containers.sh comments 4&apos;
+        //             }
+        //         }
+        //     }
+        // }
+    }
+}
+</script>
+    <loadedScripts class="map"/>
+    <durabilityHint>MAX_SURVIVABILITY</durabilityHint>
+    <timings class="map">
+      <entry>
+        <string>flowNode</string>
+        <long>69520706</long>
+      </entry>
+      <entry>
+        <string>classLoad</string>
+        <long>52891410</long>
+      </entry>
+      <entry>
+        <string>run</string>
+        <long>101757458</long>
+      </entry>
+      <entry>
+        <string>parse</string>
+        <long>293492875</long>
+      </entry>
+      <entry>
+        <string>saveProgram</string>
+        <long>33410209</long>
+      </entry>
+    </timings>
+    <sandbox>true</sandbox>
+    <iota>3</iota>
+    <head>1:3</head>
+    <done>true</done>
+    <resumeBlocked>false</resumeBlocked>
+  </execution>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList"/>
+</flow-build>

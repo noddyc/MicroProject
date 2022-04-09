@@ -1,0 +1,9 @@
+commit 83f203fb770867d930c89c4d8677c588cf936aac
+tree aa763ea2a8d9ac83d1846adbdd5505e05061e778
+parent d10c0204eb92453471b85057de989c334e9415da
+author jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-05 20:36:42 -0500
+committer GitHub <noreply@github.com> 2022-03-05 20:36:42 -0500
+
+    Update Dockerfile
+
+:100644 100644 c4780385b095eb8a45471418c4c3f84244011df4 219883b2773540101c659092f69066489b77428e M	haproxy/Dockerfile

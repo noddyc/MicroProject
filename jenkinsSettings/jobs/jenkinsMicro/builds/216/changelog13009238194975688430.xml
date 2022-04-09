@@ -1,0 +1,21 @@
+commit b6f1b41e051c0dbf256fe881be4769a58181af92
+tree f4ce523bc29f9dd41d87e7bc533e0639d80877e8
+parent 42e4db78844fd97659db7dd73ed6e21d0e52aca0
+author jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-24 22:20:31 -0400
+committer jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-24 22:20:31 -0400
+
+    Update Jenkinsfile
+
+
+:100644 100644 1b57cdb8820d5616ff3d72f0f444bb1878d8390f 8fb1ec8dd5251c53e29a38df8db36ebf2abcadeb M	Jenkinsfile
+commit 42e4db78844fd97659db7dd73ed6e21d0e52aca0
+tree aece605b4ed6625809d64f8d913d764443c9ead1
+parent f3590f5825f454a1211a640c2ab5c85306defd97
+author jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-24 21:05:53 -0400
+committer jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-24 21:05:53 -0400
+
+    1
+
+
+:100644 100644 5a74dd11056653ca3ee61d436dd51061ac88c37e 45207b95d9f4acad444e8c01c825d696c5b580ab M	microservices/haproxy/haproxy.cfg
+:100644 100644 5a74dd11056653ca3ee61d436dd51061ac88c37e 45207b95d9f4acad444e8c01c825d696c5b580ab M	microservices/haproxy/haproxy.cfg.lkg

@@ -1,0 +1,1860 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-build plugin="workflow-job@1145.v7f2433caa07f">
+  <actions>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause>
+            <userId>jh7939</userId>
+          </hudson.model.Cause_-UserIdCause>
+          <int>1</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <org.jenkinsci.plugins.workflow.libs.LibrariesAction plugin="workflow-cps-global-lib@564.ve62a_4eb_b_e039">
+      <libraries/>
+    </org.jenkinsci.plugins.workflow.libs.LibrariesAction>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.ExecutionModelAction plugin="pipeline-model-definition@1.9.3">
+      <stagesUUID>da9a885e-ed93-477f-9e7d-08c203f5268c</stagesUUID>
+      <pipelineDefs>
+        <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTPipelineDef plugin="pipeline-model-api@1.9.3">
+          <stages>
+            <stages>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Checkout</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStep>
+                        <name>checkout</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scm</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-GStringValue>
+                                <value class="string">[$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]]</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-GStringValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStep>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Microservice detect change</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                        <name>script</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scriptBlock</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                                <value class="string">env.addFiles = sh (
+                        script: &apos;git diff --diff-filter=A --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT &apos;,
+                        returnStdout: true).trim()
+                    env.modifiedFiles = sh (
+                        script: &apos;git diff --diff-filter=M --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT &apos;,
+                        returnStdout: true).trim()</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStep>
+                        <name>obtainChanges</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map"/>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStep>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Microservice Build and upload Docker image(modified)</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                        <name>script</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scriptBlock</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                                <value class="string">if(env.folders != &apos;&apos;){
+                        try{
+                            def arr = env.folders.split(&apos;,&apos;)
+                            for(int i = 0; i &lt;arr.length; i++){
+                                dir(&quot;${directory}${arr[i]}&quot;){
+                                    dockerName = &quot;${registry}${arr[i]}_microservice&quot;
+                                    dockerImage = docker.build dockerName
+                                    docker.withRegistry(&apos;&apos;, registryCredential){
+                                        dockerImage.push()
+                                    }
+                                }
+                            }
+                        }catch(Exception e){
+                            echo &quot;Microservice Build and upload Docker image(modified) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                        }
+                    }</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Microservice Build and upload Docker image(add)</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                        <name>script</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scriptBlock</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                                <value class="string">if(env.folders_new != &apos;&apos;){
+                        try{
+                            def arr_new = env.folders_new.split(&apos;,&apos;)
+                            for(int i = 0; i &lt;arr_new.length; i++){
+                                dir(&quot;${directory}${arr_new[i]}&quot;){
+                                    echo arr_new[i]
+                                    dockerName = &quot;${registry}${arr_new[i]}_microservice&quot;
+                                    dockerImage = docker.build dockerName
+                                    docker.withRegistry(&apos;&apos;, registryCredential){
+                                        dockerImage.push()
+                                        }
+                                    }
+                                }
+                        } catch(Exception e){
+                            echo &quot;Microservice Build and upload Docker image(add) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                        }
+                    }</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Microservice task (modified)</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                        <name>script</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scriptBlock</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                                <value class="string">try{
+                        if(env.folders != &apos;&apos; ){
+                            dir(&quot;./microservices&quot;){
+                                flag = &quot;edit&quot;
+                                sh &quot;bash helper.sh ${env.folders} ${flag}&quot; 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo &quot;Microservice task (modified) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                    }</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+                <name>Microservice task (add)</name>
+                <branches>
+                  <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                    <name>default</name>
+                    <steps>
+                      <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                        <name>script</name>
+                        <args class="org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTNamedArgumentList">
+                          <arguments class="linked-hash-map">
+                            <entry>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                                <key>scriptBlock</key>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                              <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                                <value class="string">try{
+                        if(env.folders_new != &apos;&apos;){
+                            dir(&quot;./microservices&quot;){
+                                flag_new = &quot;new&quot;
+                                sh &quot;bash helper.sh ${env.folders_new} ${flag_new}&quot; 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo &quot;Microservice task (add) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                    }</value>
+                              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                            </entry>
+                          </arguments>
+                        </args>
+                      </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTScriptBlock>
+                    </steps>
+                  </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTBranch>
+                </branches>
+              </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTStage>
+            </stages>
+            <uuid>da9a885e-ed93-477f-9e7d-08c203f5268c</uuid>
+          </stages>
+          <environment>
+            <variables class="linked-hash-map">
+              <entry>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                  <key>dockerImage</key>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                  <value class="string"></value>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+              </entry>
+              <entry>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                  <key>directory</key>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                  <value class="string">./microservices/services/</value>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+              </entry>
+              <entry>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                  <key>registry</key>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                  <value class="string">jh7939/microservices:</value>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+              </entry>
+              <entry>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                  <key>registry_mono</key>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                  <value class="string">jh7939/monolithic:monolithic-app</value>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+              </entry>
+              <entry>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                  <key>registryCredential</key>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTKey>
+                <org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+                  <value class="string">dockerhub_id</value>
+                </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTValue_-ConstantValue>
+              </entry>
+            </variables>
+          </environment>
+          <agent>
+            <agentType>
+              <key>any</key>
+            </agentType>
+          </agent>
+        </org.jenkinsci.plugins.pipeline.modeldefinition.ast.ModelASTPipelineDef>
+      </pipelineDefs>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.ExecutionModelAction>
+    <hudson.plugins.git.util.BuildData plugin="git@4.10.3">
+      <buildsByBranchName>
+        <entry>
+          <string>refs/remotes/origin/jenkinsMicro</string>
+          <hudson.plugins.git.util.Build>
+            <marked plugin="git-client@3.11.0">
+              <sha1>af3c7fe6b838a5af304586e4601cf2183fbfc6ef</sha1>
+              <branches class="list">
+                <hudson.plugins.git.Branch>
+                  <sha1 reference="../../../sha1"/>
+                  <name>refs/remotes/origin/jenkinsMicro</name>
+                </hudson.plugins.git.Branch>
+              </branches>
+            </marked>
+            <revision plugin="git-client@3.11.0">
+              <sha1 reference="../../marked/sha1"/>
+              <branches class="list">
+                <hudson.plugins.git.Branch reference="../../../marked/branches/hudson.plugins.git.Branch"/>
+              </branches>
+            </revision>
+            <hudsonBuildNumber>50</hudsonBuildNumber>
+          </hudson.plugins.git.util.Build>
+        </entry>
+        <entry>
+          <string>refs/remotes/origin/master</string>
+          <hudson.plugins.git.util.Build>
+            <marked plugin="git-client@3.11.0">
+              <sha1>1571896ead6e15e33c3584ff1233aa0142b5f335</sha1>
+              <branches class="list">
+                <hudson.plugins.git.Branch>
+                  <sha1 reference="../../../sha1"/>
+                  <name>refs/remotes/origin/master</name>
+                </hudson.plugins.git.Branch>
+              </branches>
+            </marked>
+            <revision reference="../marked"/>
+            <hudsonBuildNumber>396</hudsonBuildNumber>
+          </hudson.plugins.git.util.Build>
+        </entry>
+      </buildsByBranchName>
+      <lastBuild reference="../buildsByBranchName/entry[2]/hudson.plugins.git.util.Build"/>
+      <scmName></scmName>
+      <remoteUrls>
+        <string>https://github.com/hxk1633/Microservices-Project</string>
+      </remoteUrls>
+      <index>2</index>
+    </hudson.plugins.git.util.BuildData>
+    <org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState plugin="workflow-scm-step@2.13">
+      <revisionStates>
+        <entry>
+          <string>git https://github.com/hxk1633/Microservices-Project</string>
+          <hudson.scm.SCMRevisionState_-None/>
+        </entry>
+      </revisionStates>
+    </org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState>
+    <org.jenkinsci.plugins.workflow.cps.EnvActionImpl plugin="workflow-cps@2659.v52d3de6044d0">
+      <env class="tree-map">
+        <entry>
+          <string>addFiles</string>
+          <string>microservices/services/newservice3/Dockerfile
+microservices/services/newservice3/db.json
+microservices/services/newservice3/node_modules/.bin/csv2tsv
+microservices/services/newservice3/node_modules/.bin/is-ci
+microservices/services/newservice3/node_modules/.bin/mime
+microservices/services/newservice3/node_modules/.bin/mkdirp
+microservices/services/newservice3/node_modules/.bin/nodemon
+microservices/services/newservice3/node_modules/.bin/nodetouch
+microservices/services/newservice3/node_modules/.bin/nopt
+microservices/services/newservice3/node_modules/.bin/rc
+microservices/services/newservice3/node_modules/.bin/semver
+microservices/services/newservice3/node_modules/.bin/which
+microservices/services/newservice3/node_modules/.package-lock.json
+microservices/services/newservice3/node_modules/@sindresorhus/is/dist/index.d.ts
+microservices/services/newservice3/node_modules/@sindresorhus/is/dist/index.js
+microservices/services/newservice3/node_modules/@sindresorhus/is/dist/index.js.map
+microservices/services/newservice3/node_modules/@sindresorhus/is/license
+microservices/services/newservice3/node_modules/@sindresorhus/is/package.json
+microservices/services/newservice3/node_modules/@sindresorhus/is/readme.md
+microservices/services/newservice3/node_modules/@szmarczak/http-timer/LICENSE
+microservices/services/newservice3/node_modules/@szmarczak/http-timer/README.md
+microservices/services/newservice3/node_modules/@szmarczak/http-timer/package.json
+microservices/services/newservice3/node_modules/@szmarczak/http-timer/source/index.js
+microservices/services/newservice3/node_modules/abbrev/LICENSE
+microservices/services/newservice3/node_modules/abbrev/README.md
+microservices/services/newservice3/node_modules/abbrev/abbrev.js
+microservices/services/newservice3/node_modules/abbrev/package.json
+microservices/services/newservice3/node_modules/accepts/HISTORY.md
+microservices/services/newservice3/node_modules/accepts/LICENSE
+microservices/services/newservice3/node_modules/accepts/README.md
+microservices/services/newservice3/node_modules/accepts/index.js
+microservices/services/newservice3/node_modules/accepts/package.json
+microservices/services/newservice3/node_modules/ansi-align/CHANGELOG.md
+microservices/services/newservice3/node_modules/ansi-align/LICENSE
+microservices/services/newservice3/node_modules/ansi-align/README.md
+microservices/services/newservice3/node_modules/ansi-align/index.js
+microservices/services/newservice3/node_modules/ansi-align/package.json
+microservices/services/newservice3/node_modules/ansi-regex/index.d.ts
+microservices/services/newservice3/node_modules/ansi-regex/index.js
+microservices/services/newservice3/node_modules/ansi-regex/license
+microservices/services/newservice3/node_modules/ansi-regex/package.json
+microservices/services/newservice3/node_modules/ansi-regex/readme.md
+microservices/services/newservice3/node_modules/ansi-styles/index.d.ts
+microservices/services/newservice3/node_modules/ansi-styles/index.js
+microservices/services/newservice3/node_modules/ansi-styles/license
+microservices/services/newservice3/node_modules/ansi-styles/package.json
+microservices/services/newservice3/node_modules/ansi-styles/readme.md
+microservices/services/newservice3/node_modules/anymatch/LICENSE
+microservices/services/newservice3/node_modules/anymatch/README.md
+microservices/services/newservice3/node_modules/anymatch/index.d.ts
+microservices/services/newservice3/node_modules/anymatch/index.js
+microservices/services/newservice3/node_modules/anymatch/package.json
+microservices/services/newservice3/node_modules/array-flatten/LICENSE
+microservices/services/newservice3/node_modules/array-flatten/README.md
+microservices/services/newservice3/node_modules/array-flatten/array-flatten.js
+microservices/services/newservice3/node_modules/array-flatten/package.json
+microservices/services/newservice3/node_modules/balanced-match/.github/FUNDING.yml
+microservices/services/newservice3/node_modules/balanced-match/LICENSE.md
+microservices/services/newservice3/node_modules/balanced-match/README.md
+microservices/services/newservice3/node_modules/balanced-match/index.js
+microservices/services/newservice3/node_modules/balanced-match/package.json
+microservices/services/newservice3/node_modules/binary-extensions/binary-extensions.json
+microservices/services/newservice3/node_modules/binary-extensions/binary-extensions.json.d.ts
+microservices/services/newservice3/node_modules/binary-extensions/index.d.ts
+microservices/services/newservice3/node_modules/binary-extensions/index.js
+microservices/services/newservice3/node_modules/binary-extensions/license
+microservices/services/newservice3/node_modules/binary-extensions/package.json
+microservices/services/newservice3/node_modules/binary-extensions/readme.md
+microservices/services/newservice3/node_modules/body-parser/HISTORY.md
+microservices/services/newservice3/node_modules/body-parser/LICENSE
+microservices/services/newservice3/node_modules/body-parser/README.md
+microservices/services/newservice3/node_modules/body-parser/index.js
+microservices/services/newservice3/node_modules/body-parser/lib/read.js
+microservices/services/newservice3/node_modules/body-parser/lib/types/json.js
+microservices/services/newservice3/node_modules/body-parser/lib/types/raw.js
+microservices/services/newservice3/node_modules/body-parser/lib/types/text.js
+microservices/services/newservice3/node_modules/body-parser/lib/types/urlencoded.js
+microservices/services/newservice3/node_modules/body-parser/package.json
+microservices/services/newservice3/node_modules/boxen/index.d.ts
+microservices/services/newservice3/node_modules/boxen/index.js
+microservices/services/newservice3/node_modules/boxen/license
+microservices/services/newservice3/node_modules/boxen/package.json
+microservices/services/newservice3/node_modules/boxen/readme.md
+microservices/services/newservice3/node_modules/brace-expansion/LICENSE
+microservices/services/newservice3/node_modules/brace-expansion/README.md
+microservices/services/newservice3/node_modules/brace-expansion/index.js
+microservices/services/newservice3/node_modules/brace-expansion/package.json
+microservices/services/newservice3/node_modules/braces/CHANGELOG.md
+microservices/services/newservice3/node_modules/braces/LICENSE
+microservices/services/newservice3/node_modules/braces/README.md
+microservices/services/newservice3/node_modules/braces/index.js
+microservices/services/newservice3/node_modules/braces/lib/compile.js
+microservices/services/newservice3/node_modules/braces/lib/constants.js
+microservices/services/newservice3/node_modules/braces/lib/expand.js
+microservices/services/newservice3/node_modules/braces/lib/parse.js
+microservices/services/newservice3/node_modules/braces/lib/stringify.js
+microservices/services/newservice3/node_modules/braces/lib/utils.js
+microservices/services/newservice3/node_modules/braces/package.json
+microservices/services/newservice3/node_modules/bytes/History.md
+microservices/services/newservice3/node_modules/bytes/LICENSE
+microservices/services/newservice3/node_modules/bytes/Readme.md
+microservices/services/newservice3/node_modules/bytes/index.js
+microservices/services/newservice3/node_modules/bytes/package.json
+microservices/services/newservice3/node_modules/cacheable-request/LICENSE
+microservices/services/newservice3/node_modules/cacheable-request/README.md
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/buffer-stream.js
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/index.d.ts
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/index.js
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/license
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/package.json
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/get-stream/readme.md
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/lowercase-keys/index.d.ts
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/lowercase-keys/index.js
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/lowercase-keys/license
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/lowercase-keys/package.json
+microservices/services/newservice3/node_modules/cacheable-request/node_modules/lowercase-keys/readme.md
+microservices/services/newservice3/node_modules/cacheable-request/package.json
+microservices/services/newservice3/node_modules/cacheable-request/src/index.js
+microservices/services/newservice3/node_modules/camelcase/index.d.ts
+microservices/services/newservice3/node_modules/camelcase/index.js
+microservices/services/newservice3/node_modules/camelcase/license
+microservices/services/newservice3/node_modules/camelcase/package.json
+microservices/services/newservice3/node_modules/camelcase/readme.md
+microservices/services/newservice3/node_modules/chalk/index.d.ts
+microservices/services/newservice3/node_modules/chalk/license
+microservices/services/newservice3/node_modules/chalk/node_modules/has-flag/index.d.ts
+microservices/services/newservice3/node_modules/chalk/node_modules/has-flag/index.js
+microservices/services/newservice3/node_modules/chalk/node_modules/has-flag/license
+microservices/services/newservice3/node_modules/chalk/node_modules/has-flag/package.json
+microservices/services/newservice3/node_modules/chalk/node_modules/has-flag/readme.md
+microservices/services/newservice3/node_modules/chalk/node_modules/supports-color/browser.js
+microservices/services/newservice3/node_modules/chalk/node_modules/supports-color/index.js
+microservices/services/newservice3/node_modules/chalk/node_modules/supports-color/license
+microservices/services/newservice3/node_modules/chalk/node_modules/supports-color/package.json
+microservices/services/newservice3/node_modules/chalk/node_modules/supports-color/readme.md
+microservices/services/newservice3/node_modules/chalk/package.json
+microservices/services/newservice3/node_modules/chalk/readme.md
+microservices/services/newservice3/node_modules/chalk/source/index.js
+microservices/services/newservice3/node_modules/chalk/source/templates.js
+microservices/services/newservice3/node_modules/chalk/source/util.js
+microservices/services/newservice3/node_modules/chokidar/LICENSE
+microservices/services/newservice3/node_modules/chokidar/README.md
+microservices/services/newservice3/node_modules/chokidar/index.js
+microservices/services/newservice3/node_modules/chokidar/lib/constants.js
+microservices/services/newservice3/node_modules/chokidar/lib/fsevents-handler.js
+microservices/services/newservice3/node_modules/chokidar/lib/nodefs-handler.js
+microservices/services/newservice3/node_modules/chokidar/package.json
+microservices/services/newservice3/node_modules/chokidar/types/index.d.ts
+microservices/services/newservice3/node_modules/ci-info/CHANGELOG.md
+microservices/services/newservice3/node_modules/ci-info/LICENSE
+microservices/services/newservice3/node_modules/ci-info/README.md
+microservices/services/newservice3/node_modules/ci-info/index.js
+microservices/services/newservice3/node_modules/ci-info/package.json
+microservices/services/newservice3/node_modules/ci-info/vendors.json
+microservices/services/newservice3/node_modules/cli-boxes/boxes.json
+microservices/services/newservice3/node_modules/cli-boxes/index.d.ts
+microservices/services/newservice3/node_modules/cli-boxes/index.js
+microservices/services/newservice3/node_modules/cli-boxes/license
+microservices/services/newservice3/node_modules/cli-boxes/package.json
+microservices/services/newservice3/node_modules/cli-boxes/readme.md
+microservices/services/newservice3/node_modules/clone-response/LICENSE
+microservices/services/newservice3/node_modules/clone-response/README.md
+microservices/services/newservice3/node_modules/clone-response/package.json
+microservices/services/newservice3/node_modules/clone-response/src/index.js
+microservices/services/newservice3/node_modules/color-convert/CHANGELOG.md
+microservices/services/newservice3/node_modules/color-convert/LICENSE
+microservices/services/newservice3/node_modules/color-convert/README.md
+microservices/services/newservice3/node_modules/color-convert/conversions.js
+microservices/services/newservice3/node_modules/color-convert/index.js
+microservices/services/newservice3/node_modules/color-convert/package.json
+microservices/services/newservice3/node_modules/color-convert/route.js
+microservices/services/newservice3/node_modules/color-name/LICENSE
+microservices/services/newservice3/node_modules/color-name/README.md
+microservices/services/newservice3/node_modules/color-name/index.js
+microservices/services/newservice3/node_modules/color-name/package.json
+microservices/services/newservice3/node_modules/concat-map/.travis.yml
+microservices/services/newservice3/node_modules/concat-map/LICENSE
+microservices/services/newservice3/node_modules/concat-map/README.markdown
+microservices/services/newservice3/node_modules/concat-map/example/map.js
+microservices/services/newservice3/node_modules/concat-map/index.js
+microservices/services/newservice3/node_modules/concat-map/package.json
+microservices/services/newservice3/node_modules/concat-map/test/map.js
+microservices/services/newservice3/node_modules/configstore/index.js
+microservices/services/newservice3/node_modules/configstore/license
+microservices/services/newservice3/node_modules/configstore/package.json
+microservices/services/newservice3/node_modules/configstore/readme.md
+microservices/services/newservice3/node_modules/content-disposition/HISTORY.md
+microservices/services/newservice3/node_modules/content-disposition/LICENSE
+microservices/services/newservice3/node_modules/content-disposition/README.md
+microservices/services/newservice3/node_modules/content-disposition/index.js
+microservices/services/newservice3/node_modules/content-disposition/package.json
+microservices/services/newservice3/node_modules/content-type/HISTORY.md
+microservices/services/newservice3/node_modules/content-type/LICENSE
+microservices/services/newservice3/node_modules/content-type/README.md
+microservices/services/newservice3/node_modules/content-type/index.js
+microservices/services/newservice3/node_modules/content-type/package.json
+microservices/services/newservice3/node_modules/cookie-signature/.npmignore
+microservices/services/newservice3/node_modules/cookie-signature/History.md
+microservices/services/newservice3/node_modules/cookie-signature/Readme.md
+microservices/services/newservice3/node_modules/cookie-signature/index.js
+microservices/services/newservice3/node_modules/cookie-signature/package.json
+microservices/services/newservice3/node_modules/cookie/HISTORY.md
+microservices/services/newservice3/node_modules/cookie/LICENSE
+microservices/services/newservice3/node_modules/cookie/README.md
+microservices/services/newservice3/node_modules/cookie/index.js
+microservices/services/newservice3/node_modules/cookie/package.json
+microservices/services/newservice3/node_modules/crypto-random-string/index.d.ts
+microservices/services/newservice3/node_modules/crypto-random-string/index.js
+microservices/services/newservice3/node_modules/crypto-random-string/license
+microservices/services/newservice3/node_modules/crypto-random-string/package.json
+microservices/services/newservice3/node_modules/crypto-random-string/readme.md
+microservices/services/newservice3/node_modules/debug/.coveralls.yml
+microservices/services/newservice3/node_modules/debug/.eslintrc
+microservices/services/newservice3/node_modules/debug/.npmignore
+microservices/services/newservice3/node_modules/debug/.travis.yml
+microservices/services/newservice3/node_modules/debug/CHANGELOG.md
+microservices/services/newservice3/node_modules/debug/LICENSE
+microservices/services/newservice3/node_modules/debug/Makefile
+microservices/services/newservice3/node_modules/debug/README.md
+microservices/services/newservice3/node_modules/debug/component.json
+microservices/services/newservice3/node_modules/debug/karma.conf.js
+microservices/services/newservice3/node_modules/debug/node.js
+microservices/services/newservice3/node_modules/debug/package.json
+microservices/services/newservice3/node_modules/debug/src/browser.js
+microservices/services/newservice3/node_modules/debug/src/debug.js
+microservices/services/newservice3/node_modules/debug/src/index.js
+microservices/services/newservice3/node_modules/debug/src/inspector-log.js
+microservices/services/newservice3/node_modules/debug/src/node.js
+microservices/services/newservice3/node_modules/decompress-response/index.js
+microservices/services/newservice3/node_modules/decompress-response/license
+microservices/services/newservice3/node_modules/decompress-response/package.json
+microservices/services/newservice3/node_modules/decompress-response/readme.md
+microservices/services/newservice3/node_modules/deep-extend/CHANGELOG.md
+microservices/services/newservice3/node_modules/deep-extend/LICENSE
+microservices/services/newservice3/node_modules/deep-extend/README.md
+microservices/services/newservice3/node_modules/deep-extend/index.js
+microservices/services/newservice3/node_modules/deep-extend/lib/deep-extend.js
+microservices/services/newservice3/node_modules/deep-extend/package.json
+microservices/services/newservice3/node_modules/defer-to-connect/LICENSE
+microservices/services/newservice3/node_modules/defer-to-connect/README.md
+microservices/services/newservice3/node_modules/defer-to-connect/dist/index.d.ts
+microservices/services/newservice3/node_modules/defer-to-connect/dist/index.js
+microservices/services/newservice3/node_modules/defer-to-connect/package.json
+microservices/services/newservice3/node_modules/depd/History.md
+microservices/services/newservice3/node_modules/depd/LICENSE
+microservices/services/newservice3/node_modules/depd/Readme.md
+microservices/services/newservice3/node_modules/depd/index.js
+microservices/services/newservice3/node_modules/depd/lib/browser/index.js
+microservices/services/newservice3/node_modules/depd/lib/compat/callsite-tostring.js
+microservices/services/newservice3/node_modules/depd/lib/compat/event-listener-count.js
+microservices/services/newservice3/node_modules/depd/lib/compat/index.js
+microservices/services/newservice3/node_modules/depd/package.json
+microservices/services/newservice3/node_modules/destroy/LICENSE
+microservices/services/newservice3/node_modules/destroy/README.md
+microservices/services/newservice3/node_modules/destroy/index.js
+microservices/services/newservice3/node_modules/destroy/package.json
+microservices/services/newservice3/node_modules/dot-prop/index.d.ts
+microservices/services/newservice3/node_modules/dot-prop/index.js
+microservices/services/newservice3/node_modules/dot-prop/license
+microservices/services/newservice3/node_modules/dot-prop/package.json
+microservices/services/newservice3/node_modules/dot-prop/readme.md
+microservices/services/newservice3/node_modules/dsv/LICENSE
+microservices/services/newservice3/node_modules/dsv/Makefile
+microservices/services/newservice3/node_modules/dsv/README.md
+microservices/services/newservice3/node_modules/dsv/bin/csv2tsv
+microservices/services/newservice3/node_modules/dsv/build/dsv.js
+microservices/services/newservice3/node_modules/dsv/build/dsv.min.js
+microservices/services/newservice3/node_modules/dsv/dsv.js
+microservices/services/newservice3/node_modules/dsv/dsv.min.js
+microservices/services/newservice3/node_modules/dsv/index.js
+microservices/services/newservice3/node_modules/dsv/package
+microservices/services/newservice3/node_modules/dsv/package.json
+microservices/services/newservice3/node_modules/dsv/test/csv-test.js
+microservices/services/newservice3/node_modules/dsv/test/data/sample.csv
+microservices/services/newservice3/node_modules/dsv/test/data/sample.tsv
+microservices/services/newservice3/node_modules/dsv/test/tsv-test.js
+microservices/services/newservice3/node_modules/duplexer3/LICENSE.md
+microservices/services/newservice3/node_modules/duplexer3/README.md
+microservices/services/newservice3/node_modules/duplexer3/index.js
+microservices/services/newservice3/node_modules/duplexer3/package.json
+microservices/services/newservice3/node_modules/ee-first/LICENSE
+microservices/services/newservice3/node_modules/ee-first/README.md
+microservices/services/newservice3/node_modules/ee-first/index.js
+microservices/services/newservice3/node_modules/ee-first/package.json
+microservices/services/newservice3/node_modules/emoji-regex/LICENSE-MIT.txt
+microservices/services/newservice3/node_modules/emoji-regex/README.md
+microservices/services/newservice3/node_modules/emoji-regex/es2015/index.js
+microservices/services/newservice3/node_modules/emoji-regex/es2015/text.js
+microservices/services/newservice3/node_modules/emoji-regex/index.d.ts
+microservices/services/newservice3/node_modules/emoji-regex/index.js
+microservices/services/newservice3/node_modules/emoji-regex/package.json
+microservices/services/newservice3/node_modules/emoji-regex/text.js
+microservices/services/newservice3/node_modules/encodeurl/HISTORY.md
+microservices/services/newservice3/node_modules/encodeurl/LICENSE
+microservices/services/newservice3/node_modules/encodeurl/README.md
+microservices/services/newservice3/node_modules/encodeurl/index.js
+microservices/services/newservice3/node_modules/encodeurl/package.json
+microservices/services/newservice3/node_modules/end-of-stream/LICENSE
+microservices/services/newservice3/node_modules/end-of-stream/README.md
+microservices/services/newservice3/node_modules/end-of-stream/index.js
+microservices/services/newservice3/node_modules/end-of-stream/package.json
+microservices/services/newservice3/node_modules/escape-goat/index.d.ts
+microservices/services/newservice3/node_modules/escape-goat/index.js
+microservices/services/newservice3/node_modules/escape-goat/license
+microservices/services/newservice3/node_modules/escape-goat/package.json
+microservices/services/newservice3/node_modules/escape-goat/readme.md
+microservices/services/newservice3/node_modules/escape-html/LICENSE
+microservices/services/newservice3/node_modules/escape-html/Readme.md
+microservices/services/newservice3/node_modules/escape-html/index.js
+microservices/services/newservice3/node_modules/escape-html/package.json
+microservices/services/newservice3/node_modules/etag/HISTORY.md
+microservices/services/newservice3/node_modules/etag/LICENSE
+microservices/services/newservice3/node_modules/etag/README.md
+microservices/services/newservice3/node_modules/etag/index.js
+microservices/services/newservice3/node_modules/etag/package.json
+microservices/services/newservice3/node_modules/express/History.md
+microservices/services/newservice3/node_modules/express/LICENSE
+microservices/services/newservice3/node_modules/express/Readme.md
+microservices/services/newservice3/node_modules/express/index.js
+microservices/services/newservice3/node_modules/express/lib/application.js
+microservices/services/newservice3/node_modules/express/lib/express.js
+microservices/services/newservice3/node_modules/express/lib/middleware/init.js
+microservices/services/newservice3/node_modules/express/lib/middleware/query.js
+microservices/services/newservice3/node_modules/express/lib/request.js
+microservices/services/newservice3/node_modules/express/lib/response.js
+microservices/services/newservice3/node_modules/express/lib/router/index.js
+microservices/services/newservice3/node_modules/express/lib/router/layer.js
+microservices/services/newservice3/node_modules/express/lib/router/route.js
+microservices/services/newservice3/node_modules/express/lib/utils.js
+microservices/services/newservice3/node_modules/express/lib/view.js
+microservices/services/newservice3/node_modules/express/package.json
+microservices/services/newservice3/node_modules/fill-range/LICENSE
+microservices/services/newservice3/node_modules/fill-range/README.md
+microservices/services/newservice3/node_modules/fill-range/index.js
+microservices/services/newservice3/node_modules/fill-range/package.json
+microservices/services/newservice3/node_modules/finalhandler/HISTORY.md
+microservices/services/newservice3/node_modules/finalhandler/LICENSE
+microservices/services/newservice3/node_modules/finalhandler/README.md
+microservices/services/newservice3/node_modules/finalhandler/index.js
+microservices/services/newservice3/node_modules/finalhandler/package.json
+microservices/services/newservice3/node_modules/forwarded/HISTORY.md
+microservices/services/newservice3/node_modules/forwarded/LICENSE
+microservices/services/newservice3/node_modules/forwarded/README.md
+microservices/services/newservice3/node_modules/forwarded/index.js
+microservices/services/newservice3/node_modules/forwarded/package.json
+microservices/services/newservice3/node_modules/fresh/HISTORY.md
+microservices/services/newservice3/node_modules/fresh/LICENSE
+microservices/services/newservice3/node_modules/fresh/README.md
+microservices/services/newservice3/node_modules/fresh/index.js
+microservices/services/newservice3/node_modules/fresh/package.json
+microservices/services/newservice3/node_modules/fsevents/LICENSE
+microservices/services/newservice3/node_modules/fsevents/README.md
+microservices/services/newservice3/node_modules/fsevents/fsevents.d.ts
+microservices/services/newservice3/node_modules/fsevents/fsevents.js
+microservices/services/newservice3/node_modules/fsevents/fsevents.node
+microservices/services/newservice3/node_modules/fsevents/package.json
+microservices/services/newservice3/node_modules/get-stream/buffer-stream.js
+microservices/services/newservice3/node_modules/get-stream/index.js
+microservices/services/newservice3/node_modules/get-stream/license
+microservices/services/newservice3/node_modules/get-stream/package.json
+microservices/services/newservice3/node_modules/get-stream/readme.md
+microservices/services/newservice3/node_modules/glob-parent/CHANGELOG.md
+microservices/services/newservice3/node_modules/glob-parent/LICENSE
+microservices/services/newservice3/node_modules/glob-parent/README.md
+microservices/services/newservice3/node_modules/glob-parent/index.js
+microservices/services/newservice3/node_modules/glob-parent/package.json
+microservices/services/newservice3/node_modules/global-dirs/index.d.ts
+microservices/services/newservice3/node_modules/global-dirs/index.js
+microservices/services/newservice3/node_modules/global-dirs/license
+microservices/services/newservice3/node_modules/global-dirs/package.json
+microservices/services/newservice3/node_modules/global-dirs/readme.md
+microservices/services/newservice3/node_modules/got/license
+microservices/services/newservice3/node_modules/got/package.json
+microservices/services/newservice3/node_modules/got/readme.md
+microservices/services/newservice3/node_modules/got/source/as-promise.js
+microservices/services/newservice3/node_modules/got/source/as-stream.js
+microservices/services/newservice3/node_modules/got/source/create.js
+microservices/services/newservice3/node_modules/got/source/errors.js
+microservices/services/newservice3/node_modules/got/source/get-response.js
+microservices/services/newservice3/node_modules/got/source/index.js
+microservices/services/newservice3/node_modules/got/source/known-hook-events.js
+microservices/services/newservice3/node_modules/got/source/merge.js
+microservices/services/newservice3/node_modules/got/source/normalize-arguments.js
+microservices/services/newservice3/node_modules/got/source/progress.js
+microservices/services/newservice3/node_modules/got/source/request-as-event-emitter.js
+microservices/services/newservice3/node_modules/got/source/utils/deep-freeze.js
+microservices/services/newservice3/node_modules/got/source/utils/get-body-size.js
+microservices/services/newservice3/node_modules/got/source/utils/is-form-data.js
+microservices/services/newservice3/node_modules/got/source/utils/timed-out.js
+microservices/services/newservice3/node_modules/got/source/utils/url-to-options.js
+microservices/services/newservice3/node_modules/graceful-fs/LICENSE
+microservices/services/newservice3/node_modules/graceful-fs/README.md
+microservices/services/newservice3/node_modules/graceful-fs/clone.js
+microservices/services/newservice3/node_modules/graceful-fs/graceful-fs.js
+microservices/services/newservice3/node_modules/graceful-fs/legacy-streams.js
+microservices/services/newservice3/node_modules/graceful-fs/package.json
+microservices/services/newservice3/node_modules/graceful-fs/polyfills.js
+microservices/services/newservice3/node_modules/haproxy/.npmignore
+microservices/services/newservice3/node_modules/haproxy/.travis.yml
+microservices/services/newservice3/node_modules/haproxy/LICENSE
+microservices/services/newservice3/node_modules/haproxy/README.md
+microservices/services/newservice3/node_modules/haproxy/index.js
+microservices/services/newservice3/node_modules/haproxy/lib/composer.js
+microservices/services/newservice3/node_modules/haproxy/lib/config.json
+microservices/services/newservice3/node_modules/haproxy/lib/configuration.js
+microservices/services/newservice3/node_modules/haproxy/lib/orchestrator.js
+microservices/services/newservice3/node_modules/haproxy/lib/parser.js
+microservices/services/newservice3/node_modules/haproxy/package.json
+microservices/services/newservice3/node_modules/haproxy/test/config.sync.js
+microservices/services/newservice3/node_modules/haproxy/test/configuration.test.js
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/README.md
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/another.cfg
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/broken.cfg
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/comment.cfg
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/default.cfg
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/default.json
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/empty.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/index.js
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/nobackend.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/noserver.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/orchestrator.cfg
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/showinfo.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/showsess.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/showstat-parsed.js
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/showstat.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/showstatall.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/weight-initial.out
+microservices/services/newservice3/node_modules/haproxy/test/fixtures/weight.out
+microservices/services/newservice3/node_modules/haproxy/test/hamock.js
+microservices/services/newservice3/node_modules/haproxy/test/haproxy.test.js
+microservices/services/newservice3/node_modules/haproxy/test/orchestrator.test.js
+microservices/services/newservice3/node_modules/has-flag/index.js
+microservices/services/newservice3/node_modules/has-flag/license
+microservices/services/newservice3/node_modules/has-flag/package.json
+microservices/services/newservice3/node_modules/has-flag/readme.md
+microservices/services/newservice3/node_modules/has-yarn/index.d.ts
+microservices/services/newservice3/node_modules/has-yarn/index.js
+microservices/services/newservice3/node_modules/has-yarn/license
+microservices/services/newservice3/node_modules/has-yarn/package.json
+microservices/services/newservice3/node_modules/has-yarn/readme.md
+microservices/services/newservice3/node_modules/http-cache-semantics/LICENSE
+microservices/services/newservice3/node_modules/http-cache-semantics/README.md
+microservices/services/newservice3/node_modules/http-cache-semantics/index.js
+microservices/services/newservice3/node_modules/http-cache-semantics/package.json
+microservices/services/newservice3/node_modules/http-errors/HISTORY.md
+microservices/services/newservice3/node_modules/http-errors/LICENSE
+microservices/services/newservice3/node_modules/http-errors/README.md
+microservices/services/newservice3/node_modules/http-errors/index.js
+microservices/services/newservice3/node_modules/http-errors/package.json
+microservices/services/newservice3/node_modules/iconv-lite/Changelog.md
+microservices/services/newservice3/node_modules/iconv-lite/LICENSE
+microservices/services/newservice3/node_modules/iconv-lite/README.md
+microservices/services/newservice3/node_modules/iconv-lite/encodings/dbcs-codec.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/dbcs-data.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/index.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/internal.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/sbcs-codec.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/sbcs-data-generated.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/sbcs-data.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/big5-added.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/cp936.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/cp949.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/cp950.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/eucjp.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/gbk-added.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/tables/shiftjis.json
+microservices/services/newservice3/node_modules/iconv-lite/encodings/utf16.js
+microservices/services/newservice3/node_modules/iconv-lite/encodings/utf7.js
+microservices/services/newservice3/node_modules/iconv-lite/lib/bom-handling.js
+microservices/services/newservice3/node_modules/iconv-lite/lib/extend-node.js
+microservices/services/newservice3/node_modules/iconv-lite/lib/index.d.ts
+microservices/services/newservice3/node_modules/iconv-lite/lib/index.js
+microservices/services/newservice3/node_modules/iconv-lite/lib/streams.js
+microservices/services/newservice3/node_modules/iconv-lite/package.json
+microservices/services/newservice3/node_modules/ignore-by-default/LICENSE
+microservices/services/newservice3/node_modules/ignore-by-default/README.md
+microservices/services/newservice3/node_modules/ignore-by-default/index.js
+microservices/services/newservice3/node_modules/ignore-by-default/package.json
+microservices/services/newservice3/node_modules/import-lazy/index.js
+microservices/services/newservice3/node_modules/import-lazy/license
+microservices/services/newservice3/node_modules/import-lazy/package.json
+microservices/services/newservice3/node_modules/import-lazy/readme.md
+microservices/services/newservice3/node_modules/imurmurhash/README.md
+microservices/services/newservice3/node_modules/imurmurhash/imurmurhash.js
+microservices/services/newservice3/node_modules/imurmurhash/imurmurhash.min.js
+microservices/services/newservice3/node_modules/imurmurhash/package.json
+microservices/services/newservice3/node_modules/inherits/LICENSE
+microservices/services/newservice3/node_modules/inherits/README.md
+microservices/services/newservice3/node_modules/inherits/inherits.js
+microservices/services/newservice3/node_modules/inherits/inherits_browser.js
+microservices/services/newservice3/node_modules/inherits/package.json
+microservices/services/newservice3/node_modules/ini/LICENSE
+microservices/services/newservice3/node_modules/ini/README.md
+microservices/services/newservice3/node_modules/ini/ini.js
+microservices/services/newservice3/node_modules/ini/package.json
+microservices/services/newservice3/node_modules/ipaddr.js/LICENSE
+microservices/services/newservice3/node_modules/ipaddr.js/README.md
+microservices/services/newservice3/node_modules/ipaddr.js/ipaddr.min.js
+microservices/services/newservice3/node_modules/ipaddr.js/lib/ipaddr.js
+microservices/services/newservice3/node_modules/ipaddr.js/lib/ipaddr.js.d.ts
+microservices/services/newservice3/node_modules/ipaddr.js/package.json
+microservices/services/newservice3/node_modules/is-binary-path/index.d.ts
+microservices/services/newservice3/node_modules/is-binary-path/index.js
+microservices/services/newservice3/node_modules/is-binary-path/license
+microservices/services/newservice3/node_modules/is-binary-path/package.json
+microservices/services/newservice3/node_modules/is-binary-path/readme.md
+microservices/services/newservice3/node_modules/is-ci/CHANGELOG.md
+microservices/services/newservice3/node_modules/is-ci/LICENSE
+microservices/services/newservice3/node_modules/is-ci/README.md
+microservices/services/newservice3/node_modules/is-ci/bin.js
+microservices/services/newservice3/node_modules/is-ci/index.js
+microservices/services/newservice3/node_modules/is-ci/package.json
+microservices/services/newservice3/node_modules/is-extglob/LICENSE
+microservices/services/newservice3/node_modules/is-extglob/README.md
+microservices/services/newservice3/node_modules/is-extglob/index.js
+microservices/services/newservice3/node_modules/is-extglob/package.json
+microservices/services/newservice3/node_modules/is-fullwidth-code-point/index.d.ts
+microservices/services/newservice3/node_modules/is-fullwidth-code-point/index.js
+microservices/services/newservice3/node_modules/is-fullwidth-code-point/license
+microservices/services/newservice3/node_modules/is-fullwidth-code-point/package.json
+microservices/services/newservice3/node_modules/is-fullwidth-code-point/readme.md
+microservices/services/newservice3/node_modules/is-glob/LICENSE
+microservices/services/newservice3/node_modules/is-glob/README.md
+microservices/services/newservice3/node_modules/is-glob/index.js
+microservices/services/newservice3/node_modules/is-glob/package.json
+microservices/services/newservice3/node_modules/is-installed-globally/index.d.ts
+microservices/services/newservice3/node_modules/is-installed-globally/index.js
+microservices/services/newservice3/node_modules/is-installed-globally/license
+microservices/services/newservice3/node_modules/is-installed-globally/package.json
+microservices/services/newservice3/node_modules/is-installed-globally/readme.md
+microservices/services/newservice3/node_modules/is-npm/index.d.ts
+microservices/services/newservice3/node_modules/is-npm/index.js
+microservices/services/newservice3/node_modules/is-npm/license
+microservices/services/newservice3/node_modules/is-npm/package.json
+microservices/services/newservice3/node_modules/is-npm/readme.md
+microservices/services/newservice3/node_modules/is-number/LICENSE
+microservices/services/newservice3/node_modules/is-number/README.md
+microservices/services/newservice3/node_modules/is-number/index.js
+microservices/services/newservice3/node_modules/is-number/package.json
+microservices/services/newservice3/node_modules/is-obj/index.d.ts
+microservices/services/newservice3/node_modules/is-obj/index.js
+microservices/services/newservice3/node_modules/is-obj/license
+microservices/services/newservice3/node_modules/is-obj/package.json
+microservices/services/newservice3/node_modules/is-obj/readme.md
+microservices/services/newservice3/node_modules/is-path-inside/index.d.ts
+microservices/services/newservice3/node_modules/is-path-inside/index.js
+microservices/services/newservice3/node_modules/is-path-inside/license
+microservices/services/newservice3/node_modules/is-path-inside/package.json
+microservices/services/newservice3/node_modules/is-path-inside/readme.md
+microservices/services/newservice3/node_modules/is-typedarray/LICENSE.md
+microservices/services/newservice3/node_modules/is-typedarray/README.md
+microservices/services/newservice3/node_modules/is-typedarray/index.js
+microservices/services/newservice3/node_modules/is-typedarray/package.json
+microservices/services/newservice3/node_modules/is-typedarray/test.js
+microservices/services/newservice3/node_modules/is-yarn-global/.travis.yml
+microservices/services/newservice3/node_modules/is-yarn-global/LICENSE
+microservices/services/newservice3/node_modules/is-yarn-global/README.md
+microservices/services/newservice3/node_modules/is-yarn-global/index.js
+microservices/services/newservice3/node_modules/is-yarn-global/package.json
+microservices/services/newservice3/node_modules/isexe/.npmignore
+microservices/services/newservice3/node_modules/isexe/LICENSE
+microservices/services/newservice3/node_modules/isexe/README.md
+microservices/services/newservice3/node_modules/isexe/index.js
+microservices/services/newservice3/node_modules/isexe/mode.js
+microservices/services/newservice3/node_modules/isexe/package.json
+microservices/services/newservice3/node_modules/isexe/test/basic.js
+microservices/services/newservice3/node_modules/isexe/windows.js
+microservices/services/newservice3/node_modules/json-buffer/.npmignore
+microservices/services/newservice3/node_modules/json-buffer/.travis.yml
+microservices/services/newservice3/node_modules/json-buffer/LICENSE
+microservices/services/newservice3/node_modules/json-buffer/README.md
+microservices/services/newservice3/node_modules/json-buffer/index.js
+microservices/services/newservice3/node_modules/json-buffer/package.json
+microservices/services/newservice3/node_modules/json-buffer/test/index.js
+microservices/services/newservice3/node_modules/keyv/LICENSE
+microservices/services/newservice3/node_modules/keyv/README.md
+microservices/services/newservice3/node_modules/keyv/package.json
+microservices/services/newservice3/node_modules/keyv/src/index.js
+microservices/services/newservice3/node_modules/latest-version/index.d.ts
+microservices/services/newservice3/node_modules/latest-version/index.js
+microservices/services/newservice3/node_modules/latest-version/license
+microservices/services/newservice3/node_modules/latest-version/package.json
+microservices/services/newservice3/node_modules/latest-version/readme.md
+microservices/services/newservice3/node_modules/lowercase-keys/index.js
+microservices/services/newservice3/node_modules/lowercase-keys/license
+microservices/services/newservice3/node_modules/lowercase-keys/package.json
+microservices/services/newservice3/node_modules/lowercase-keys/readme.md
+microservices/services/newservice3/node_modules/lru-cache/LICENSE
+microservices/services/newservice3/node_modules/lru-cache/README.md
+microservices/services/newservice3/node_modules/lru-cache/index.js
+microservices/services/newservice3/node_modules/lru-cache/package.json
+microservices/services/newservice3/node_modules/make-dir/index.d.ts
+microservices/services/newservice3/node_modules/make-dir/index.js
+microservices/services/newservice3/node_modules/make-dir/license
+microservices/services/newservice3/node_modules/make-dir/node_modules/.bin/semver
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/CHANGELOG.md
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/LICENSE
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/README.md
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/bin/semver.js
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/package.json
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/range.bnf
+microservices/services/newservice3/node_modules/make-dir/node_modules/semver/semver.js
+microservices/services/newservice3/node_modules/make-dir/package.json
+microservices/services/newservice3/node_modules/make-dir/readme.md
+microservices/services/newservice3/node_modules/media-typer/HISTORY.md
+microservices/services/newservice3/node_modules/media-typer/LICENSE
+microservices/services/newservice3/node_modules/media-typer/README.md
+microservices/services/newservice3/node_modules/media-typer/index.js
+microservices/services/newservice3/node_modules/media-typer/package.json
+microservices/services/newservice3/node_modules/merge-descriptors/HISTORY.md
+microservices/services/newservice3/node_modules/merge-descriptors/LICENSE
+microservices/services/newservice3/node_modules/merge-descriptors/README.md
+microservices/services/newservice3/node_modules/merge-descriptors/index.js
+microservices/services/newservice3/node_modules/merge-descriptors/package.json
+microservices/services/newservice3/node_modules/methods/HISTORY.md
+microservices/services/newservice3/node_modules/methods/LICENSE
+microservices/services/newservice3/node_modules/methods/README.md
+microservices/services/newservice3/node_modules/methods/index.js
+microservices/services/newservice3/node_modules/methods/package.json
+microservices/services/newservice3/node_modules/mime-db/HISTORY.md
+microservices/services/newservice3/node_modules/mime-db/LICENSE
+microservices/services/newservice3/node_modules/mime-db/README.md
+microservices/services/newservice3/node_modules/mime-db/db.json
+microservices/services/newservice3/node_modules/mime-db/index.js
+microservices/services/newservice3/node_modules/mime-db/package.json
+microservices/services/newservice3/node_modules/mime-types/HISTORY.md
+microservices/services/newservice3/node_modules/mime-types/LICENSE
+microservices/services/newservice3/node_modules/mime-types/README.md
+microservices/services/newservice3/node_modules/mime-types/index.js
+microservices/services/newservice3/node_modules/mime-types/package.json
+microservices/services/newservice3/node_modules/mime/.npmignore
+microservices/services/newservice3/node_modules/mime/CHANGELOG.md
+microservices/services/newservice3/node_modules/mime/LICENSE
+microservices/services/newservice3/node_modules/mime/README.md
+microservices/services/newservice3/node_modules/mime/cli.js
+microservices/services/newservice3/node_modules/mime/mime.js
+microservices/services/newservice3/node_modules/mime/package.json
+microservices/services/newservice3/node_modules/mime/src/build.js
+microservices/services/newservice3/node_modules/mime/src/test.js
+microservices/services/newservice3/node_modules/mime/types.json
+microservices/services/newservice3/node_modules/mimic-response/index.js
+microservices/services/newservice3/node_modules/mimic-response/license
+microservices/services/newservice3/node_modules/mimic-response/package.json
+microservices/services/newservice3/node_modules/mimic-response/readme.md
+microservices/services/newservice3/node_modules/minimatch/LICENSE
+microservices/services/newservice3/node_modules/minimatch/README.md
+microservices/services/newservice3/node_modules/minimatch/minimatch.js
+microservices/services/newservice3/node_modules/minimatch/package.json
+microservices/services/newservice3/node_modules/minimist/.travis.yml
+microservices/services/newservice3/node_modules/minimist/LICENSE
+microservices/services/newservice3/node_modules/minimist/example/parse.js
+microservices/services/newservice3/node_modules/minimist/index.js
+microservices/services/newservice3/node_modules/minimist/package.json
+microservices/services/newservice3/node_modules/minimist/readme.markdown
+microservices/services/newservice3/node_modules/minimist/test/all_bool.js
+microservices/services/newservice3/node_modules/minimist/test/bool.js
+microservices/services/newservice3/node_modules/minimist/test/dash.js
+microservices/services/newservice3/node_modules/minimist/test/default_bool.js
+microservices/services/newservice3/node_modules/minimist/test/dotted.js
+microservices/services/newservice3/node_modules/minimist/test/kv_short.js
+microservices/services/newservice3/node_modules/minimist/test/long.js
+microservices/services/newservice3/node_modules/minimist/test/num.js
+microservices/services/newservice3/node_modules/minimist/test/parse.js
+microservices/services/newservice3/node_modules/minimist/test/parse_modified.js
+microservices/services/newservice3/node_modules/minimist/test/proto.js
+microservices/services/newservice3/node_modules/minimist/test/short.js
+microservices/services/newservice3/node_modules/minimist/test/stop_early.js
+microservices/services/newservice3/node_modules/minimist/test/unknown.js
+microservices/services/newservice3/node_modules/minimist/test/whitespace.js
+microservices/services/newservice3/node_modules/mkdirp/LICENSE
+microservices/services/newservice3/node_modules/mkdirp/bin/cmd.js
+microservices/services/newservice3/node_modules/mkdirp/bin/usage.txt
+microservices/services/newservice3/node_modules/mkdirp/index.js
+microservices/services/newservice3/node_modules/mkdirp/package.json
+microservices/services/newservice3/node_modules/mkdirp/readme.markdown
+microservices/services/newservice3/node_modules/ms/index.js
+microservices/services/newservice3/node_modules/ms/license.md
+microservices/services/newservice3/node_modules/ms/package.json
+microservices/services/newservice3/node_modules/ms/readme.md
+microservices/services/newservice3/node_modules/negotiator/HISTORY.md
+microservices/services/newservice3/node_modules/negotiator/LICENSE
+microservices/services/newservice3/node_modules/negotiator/README.md
+microservices/services/newservice3/node_modules/negotiator/index.js
+microservices/services/newservice3/node_modules/negotiator/lib/charset.js
+microservices/services/newservice3/node_modules/negotiator/lib/encoding.js
+microservices/services/newservice3/node_modules/negotiator/lib/language.js
+microservices/services/newservice3/node_modules/negotiator/lib/mediaType.js
+microservices/services/newservice3/node_modules/negotiator/package.json
+microservices/services/newservice3/node_modules/nodemon/.eslintrc.json
+microservices/services/newservice3/node_modules/nodemon/.jshintrc
+microservices/services/newservice3/node_modules/nodemon/.releaserc
+microservices/services/newservice3/node_modules/nodemon/.travis.yml
+microservices/services/newservice3/node_modules/nodemon/LICENSE
+microservices/services/newservice3/node_modules/nodemon/README.md
+microservices/services/newservice3/node_modules/nodemon/bin/nodemon.js
+microservices/services/newservice3/node_modules/nodemon/bin/postinstall.js
+microservices/services/newservice3/node_modules/nodemon/bin/windows-kill.exe
+microservices/services/newservice3/node_modules/nodemon/commitlint.config.js
+microservices/services/newservice3/node_modules/nodemon/doc/cli/authors.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/config.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/help.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/logo.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/options.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/topics.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/usage.txt
+microservices/services/newservice3/node_modules/nodemon/doc/cli/whoami.txt
+microservices/services/newservice3/node_modules/nodemon/lib/cli/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/cli/parse.js
+microservices/services/newservice3/node_modules/nodemon/lib/config/command.js
+microservices/services/newservice3/node_modules/nodemon/lib/config/defaults.js
+microservices/services/newservice3/node_modules/nodemon/lib/config/exec.js
+microservices/services/newservice3/node_modules/nodemon/lib/config/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/config/load.js
+microservices/services/newservice3/node_modules/nodemon/lib/help/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/monitor/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/monitor/match.js
+microservices/services/newservice3/node_modules/nodemon/lib/monitor/run.js
+microservices/services/newservice3/node_modules/nodemon/lib/monitor/signals.js
+microservices/services/newservice3/node_modules/nodemon/lib/monitor/watch.js
+microservices/services/newservice3/node_modules/nodemon/lib/nodemon.js
+microservices/services/newservice3/node_modules/nodemon/lib/rules/add.js
+microservices/services/newservice3/node_modules/nodemon/lib/rules/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/rules/parse.js
+microservices/services/newservice3/node_modules/nodemon/lib/spawn.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/bus.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/clone.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/colour.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/index.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/log.js
+microservices/services/newservice3/node_modules/nodemon/lib/utils/merge.js
+microservices/services/newservice3/node_modules/nodemon/lib/version.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/CHANGELOG.md
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/LICENSE
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/README.md
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/node.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/package.json
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/src/browser.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/src/common.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/src/index.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/debug/src/node.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/ms/index.js
+microservices/services/newservice3/node_modules/nodemon/node_modules/ms/license.md
+microservices/services/newservice3/node_modules/nodemon/node_modules/ms/package.json
+microservices/services/newservice3/node_modules/nodemon/node_modules/ms/readme.md
+microservices/services/newservice3/node_modules/nodemon/package.json
+microservices/services/newservice3/node_modules/nopt/.npmignore
+microservices/services/newservice3/node_modules/nopt/LICENSE
+microservices/services/newservice3/node_modules/nopt/README.md
+microservices/services/newservice3/node_modules/nopt/bin/nopt.js
+microservices/services/newservice3/node_modules/nopt/examples/my-program.js
+microservices/services/newservice3/node_modules/nopt/lib/nopt.js
+microservices/services/newservice3/node_modules/nopt/package.json
+microservices/services/newservice3/node_modules/normalize-path/LICENSE
+microservices/services/newservice3/node_modules/normalize-path/README.md
+microservices/services/newservice3/node_modules/normalize-path/index.js
+microservices/services/newservice3/node_modules/normalize-path/package.json
+microservices/services/newservice3/node_modules/normalize-url/index.d.ts
+microservices/services/newservice3/node_modules/normalize-url/index.js
+microservices/services/newservice3/node_modules/normalize-url/license
+microservices/services/newservice3/node_modules/normalize-url/package.json
+microservices/services/newservice3/node_modules/normalize-url/readme.md
+microservices/services/newservice3/node_modules/on-finished/HISTORY.md
+microservices/services/newservice3/node_modules/on-finished/LICENSE
+microservices/services/newservice3/node_modules/on-finished/README.md
+microservices/services/newservice3/node_modules/on-finished/index.js
+microservices/services/newservice3/node_modules/on-finished/package.json
+microservices/services/newservice3/node_modules/once/LICENSE
+microservices/services/newservice3/node_modules/once/README.md
+microservices/services/newservice3/node_modules/once/once.js
+microservices/services/newservice3/node_modules/once/package.json
+microservices/services/newservice3/node_modules/p-cancelable/index.d.ts
+microservices/services/newservice3/node_modules/p-cancelable/index.js
+microservices/services/newservice3/node_modules/p-cancelable/license
+microservices/services/newservice3/node_modules/p-cancelable/package.json
+microservices/services/newservice3/node_modules/p-cancelable/readme.md
+microservices/services/newservice3/node_modules/package-json/index.d.ts
+microservices/services/newservice3/node_modules/package-json/index.js
+microservices/services/newservice3/node_modules/package-json/license
+microservices/services/newservice3/node_modules/package-json/node_modules/.bin/semver
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/CHANGELOG.md
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/LICENSE
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/README.md
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/bin/semver.js
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/package.json
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/range.bnf
+microservices/services/newservice3/node_modules/package-json/node_modules/semver/semver.js
+microservices/services/newservice3/node_modules/package-json/package.json
+microservices/services/newservice3/node_modules/package-json/readme.md
+microservices/services/newservice3/node_modules/parseurl/HISTORY.md
+microservices/services/newservice3/node_modules/parseurl/LICENSE
+microservices/services/newservice3/node_modules/parseurl/README.md
+microservices/services/newservice3/node_modules/parseurl/index.js
+microservices/services/newservice3/node_modules/parseurl/package.json
+microservices/services/newservice3/node_modules/path-to-regexp/History.md
+microservices/services/newservice3/node_modules/path-to-regexp/LICENSE
+microservices/services/newservice3/node_modules/path-to-regexp/Readme.md
+microservices/services/newservice3/node_modules/path-to-regexp/index.js
+microservices/services/newservice3/node_modules/path-to-regexp/package.json
+microservices/services/newservice3/node_modules/picomatch/CHANGELOG.md
+microservices/services/newservice3/node_modules/picomatch/LICENSE
+microservices/services/newservice3/node_modules/picomatch/README.md
+microservices/services/newservice3/node_modules/picomatch/index.js
+microservices/services/newservice3/node_modules/picomatch/lib/constants.js
+microservices/services/newservice3/node_modules/picomatch/lib/parse.js
+microservices/services/newservice3/node_modules/picomatch/lib/picomatch.js
+microservices/services/newservice3/node_modules/picomatch/lib/scan.js
+microservices/services/newservice3/node_modules/picomatch/lib/utils.js
+microservices/services/newservice3/node_modules/picomatch/package.json
+microservices/services/newservice3/node_modules/prepend-http/index.js
+microservices/services/newservice3/node_modules/prepend-http/license
+microservices/services/newservice3/node_modules/prepend-http/package.json
+microservices/services/newservice3/node_modules/prepend-http/readme.md
+microservices/services/newservice3/node_modules/proxy-addr/HISTORY.md
+microservices/services/newservice3/node_modules/proxy-addr/LICENSE
+microservices/services/newservice3/node_modules/proxy-addr/README.md
+microservices/services/newservice3/node_modules/proxy-addr/index.js
+microservices/services/newservice3/node_modules/proxy-addr/package.json
+microservices/services/newservice3/node_modules/pstree.remy/.travis.yml
+microservices/services/newservice3/node_modules/pstree.remy/LICENSE
+microservices/services/newservice3/node_modules/pstree.remy/README.md
+microservices/services/newservice3/node_modules/pstree.remy/lib/index.js
+microservices/services/newservice3/node_modules/pstree.remy/lib/tree.js
+microservices/services/newservice3/node_modules/pstree.remy/lib/utils.js
+microservices/services/newservice3/node_modules/pstree.remy/package.json
+microservices/services/newservice3/node_modules/pstree.remy/tests/fixtures/index.js
+microservices/services/newservice3/node_modules/pstree.remy/tests/fixtures/out1
+microservices/services/newservice3/node_modules/pstree.remy/tests/fixtures/out2
+microservices/services/newservice3/node_modules/pstree.remy/tests/index.test.js
+microservices/services/newservice3/node_modules/pump/.travis.yml
+microservices/services/newservice3/node_modules/pump/LICENSE
+microservices/services/newservice3/node_modules/pump/README.md
+microservices/services/newservice3/node_modules/pump/index.js
+microservices/services/newservice3/node_modules/pump/package.json
+microservices/services/newservice3/node_modules/pump/test-browser.js
+microservices/services/newservice3/node_modules/pump/test-node.js
+microservices/services/newservice3/node_modules/pupa/index.d.ts
+microservices/services/newservice3/node_modules/pupa/index.js
+microservices/services/newservice3/node_modules/pupa/license
+microservices/services/newservice3/node_modules/pupa/package.json
+microservices/services/newservice3/node_modules/pupa/readme.md
+microservices/services/newservice3/node_modules/qs/.editorconfig
+microservices/services/newservice3/node_modules/qs/.eslintrc
+microservices/services/newservice3/node_modules/qs/.github/FUNDING.yml
+microservices/services/newservice3/node_modules/qs/.nycrc
+microservices/services/newservice3/node_modules/qs/CHANGELOG.md
+microservices/services/newservice3/node_modules/qs/LICENSE.md
+microservices/services/newservice3/node_modules/qs/README.md
+microservices/services/newservice3/node_modules/qs/dist/qs.js
+microservices/services/newservice3/node_modules/qs/lib/formats.js
+microservices/services/newservice3/node_modules/qs/lib/index.js
+microservices/services/newservice3/node_modules/qs/lib/parse.js
+microservices/services/newservice3/node_modules/qs/lib/stringify.js
+microservices/services/newservice3/node_modules/qs/lib/utils.js
+microservices/services/newservice3/node_modules/qs/package.json
+microservices/services/newservice3/node_modules/qs/test/parse.js
+microservices/services/newservice3/node_modules/qs/test/stringify.js
+microservices/services/newservice3/node_modules/qs/test/utils.js
+microservices/services/newservice3/node_modules/range-parser/HISTORY.md
+microservices/services/newservice3/node_modules/range-parser/LICENSE
+microservices/services/newservice3/node_modules/range-parser/README.md
+microservices/services/newservice3/node_modules/range-parser/index.js
+microservices/services/newservice3/node_modules/range-parser/package.json
+microservices/services/newservice3/node_modules/raw-body/HISTORY.md
+microservices/services/newservice3/node_modules/raw-body/LICENSE
+microservices/services/newservice3/node_modules/raw-body/README.md
+microservices/services/newservice3/node_modules/raw-body/index.d.ts
+microservices/services/newservice3/node_modules/raw-body/index.js
+microservices/services/newservice3/node_modules/raw-body/package.json
+microservices/services/newservice3/node_modules/rc/LICENSE.APACHE2
+microservices/services/newservice3/node_modules/rc/LICENSE.BSD
+microservices/services/newservice3/node_modules/rc/LICENSE.MIT
+microservices/services/newservice3/node_modules/rc/README.md
+microservices/services/newservice3/node_modules/rc/browser.js
+microservices/services/newservice3/node_modules/rc/cli.js
+microservices/services/newservice3/node_modules/rc/index.js
+microservices/services/newservice3/node_modules/rc/lib/utils.js
+microservices/services/newservice3/node_modules/rc/node_modules/ini/LICENSE
+microservices/services/newservice3/node_modules/rc/node_modules/ini/README.md
+microservices/services/newservice3/node_modules/rc/node_modules/ini/ini.js
+microservices/services/newservice3/node_modules/rc/node_modules/ini/package.json
+microservices/services/newservice3/node_modules/rc/package.json
+microservices/services/newservice3/node_modules/rc/test/ini.js
+microservices/services/newservice3/node_modules/rc/test/nested-env-vars.js
+microservices/services/newservice3/node_modules/rc/test/test.js
+microservices/services/newservice3/node_modules/readdirp/LICENSE
+microservices/services/newservice3/node_modules/readdirp/README.md
+microservices/services/newservice3/node_modules/readdirp/index.d.ts
+microservices/services/newservice3/node_modules/readdirp/index.js
+microservices/services/newservice3/node_modules/readdirp/package.json
+microservices/services/newservice3/node_modules/registry-auth-token/CHANGELOG.md
+microservices/services/newservice3/node_modules/registry-auth-token/LICENSE
+microservices/services/newservice3/node_modules/registry-auth-token/README.md
+microservices/services/newservice3/node_modules/registry-auth-token/base64.js
+microservices/services/newservice3/node_modules/registry-auth-token/index.js
+microservices/services/newservice3/node_modules/registry-auth-token/package.json
+microservices/services/newservice3/node_modules/registry-auth-token/registry-url.js
+microservices/services/newservice3/node_modules/registry-url/index.d.ts
+microservices/services/newservice3/node_modules/registry-url/index.js
+microservices/services/newservice3/node_modules/registry-url/license
+microservices/services/newservice3/node_modules/registry-url/package.json
+microservices/services/newservice3/node_modules/registry-url/readme.md
+microservices/services/newservice3/node_modules/responselike/LICENSE
+microservices/services/newservice3/node_modules/responselike/README.md
+microservices/services/newservice3/node_modules/responselike/package.json
+microservices/services/newservice3/node_modules/responselike/src/index.js
+microservices/services/newservice3/node_modules/safe-buffer/LICENSE
+microservices/services/newservice3/node_modules/safe-buffer/README.md
+microservices/services/newservice3/node_modules/safe-buffer/index.d.ts
+microservices/services/newservice3/node_modules/safe-buffer/index.js
+microservices/services/newservice3/node_modules/safe-buffer/package.json
+microservices/services/newservice3/node_modules/safer-buffer/LICENSE
+microservices/services/newservice3/node_modules/safer-buffer/Porting-Buffer.md
+microservices/services/newservice3/node_modules/safer-buffer/Readme.md
+microservices/services/newservice3/node_modules/safer-buffer/dangerous.js
+microservices/services/newservice3/node_modules/safer-buffer/package.json
+microservices/services/newservice3/node_modules/safer-buffer/safer.js
+microservices/services/newservice3/node_modules/safer-buffer/tests.js
+microservices/services/newservice3/node_modules/semver-diff/index.d.ts
+microservices/services/newservice3/node_modules/semver-diff/index.js
+microservices/services/newservice3/node_modules/semver-diff/license
+microservices/services/newservice3/node_modules/semver-diff/node_modules/.bin/semver
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/CHANGELOG.md
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/LICENSE
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/README.md
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/bin/semver.js
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/package.json
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/range.bnf
+microservices/services/newservice3/node_modules/semver-diff/node_modules/semver/semver.js
+microservices/services/newservice3/node_modules/semver-diff/package.json
+microservices/services/newservice3/node_modules/semver-diff/readme.md
+microservices/services/newservice3/node_modules/semver/CHANGELOG.md
+microservices/services/newservice3/node_modules/semver/LICENSE
+microservices/services/newservice3/node_modules/semver/README.md
+microservices/services/newservice3/node_modules/semver/bin/semver
+microservices/services/newservice3/node_modules/semver/package.json
+microservices/services/newservice3/node_modules/semver/range.bnf
+microservices/services/newservice3/node_modules/semver/semver.js
+microservices/services/newservice3/node_modules/send/HISTORY.md
+microservices/services/newservice3/node_modules/send/LICENSE
+microservices/services/newservice3/node_modules/send/README.md
+microservices/services/newservice3/node_modules/send/index.js
+microservices/services/newservice3/node_modules/send/node_modules/ms/index.js
+microservices/services/newservice3/node_modules/send/node_modules/ms/license.md
+microservices/services/newservice3/node_modules/send/node_modules/ms/package.json
+microservices/services/newservice3/node_modules/send/node_modules/ms/readme.md
+microservices/services/newservice3/node_modules/send/package.json
+microservices/services/newservice3/node_modules/serve-static/HISTORY.md
+microservices/services/newservice3/node_modules/serve-static/LICENSE
+microservices/services/newservice3/node_modules/serve-static/README.md
+microservices/services/newservice3/node_modules/serve-static/index.js
+microservices/services/newservice3/node_modules/serve-static/package.json
+microservices/services/newservice3/node_modules/setprototypeof/LICENSE
+microservices/services/newservice3/node_modules/setprototypeof/README.md
+microservices/services/newservice3/node_modules/setprototypeof/index.d.ts
+microservices/services/newservice3/node_modules/setprototypeof/index.js
+microservices/services/newservice3/node_modules/setprototypeof/package.json
+microservices/services/newservice3/node_modules/setprototypeof/test/index.js
+microservices/services/newservice3/node_modules/signal-exit/LICENSE.txt
+microservices/services/newservice3/node_modules/signal-exit/README.md
+microservices/services/newservice3/node_modules/signal-exit/index.js
+microservices/services/newservice3/node_modules/signal-exit/package.json
+microservices/services/newservice3/node_modules/signal-exit/signals.js
+microservices/services/newservice3/node_modules/statuses/HISTORY.md
+microservices/services/newservice3/node_modules/statuses/LICENSE
+microservices/services/newservice3/node_modules/statuses/README.md
+microservices/services/newservice3/node_modules/statuses/codes.json
+microservices/services/newservice3/node_modules/statuses/index.js
+microservices/services/newservice3/node_modules/statuses/package.json
+microservices/services/newservice3/node_modules/string-width/index.d.ts
+microservices/services/newservice3/node_modules/string-width/index.js
+microservices/services/newservice3/node_modules/string-width/license
+microservices/services/newservice3/node_modules/string-width/package.json
+microservices/services/newservice3/node_modules/string-width/readme.md
+microservices/services/newservice3/node_modules/strip-ansi/index.d.ts
+microservices/services/newservice3/node_modules/strip-ansi/index.js
+microservices/services/newservice3/node_modules/strip-ansi/license
+microservices/services/newservice3/node_modules/strip-ansi/package.json
+microservices/services/newservice3/node_modules/strip-ansi/readme.md
+microservices/services/newservice3/node_modules/strip-json-comments/index.js
+microservices/services/newservice3/node_modules/strip-json-comments/license
+microservices/services/newservice3/node_modules/strip-json-comments/package.json
+microservices/services/newservice3/node_modules/strip-json-comments/readme.md
+microservices/services/newservice3/node_modules/supports-color/browser.js
+microservices/services/newservice3/node_modules/supports-color/index.js
+microservices/services/newservice3/node_modules/supports-color/license
+microservices/services/newservice3/node_modules/supports-color/package.json
+microservices/services/newservice3/node_modules/supports-color/readme.md
+microservices/services/newservice3/node_modules/to-readable-stream/index.js
+microservices/services/newservice3/node_modules/to-readable-stream/license
+microservices/services/newservice3/node_modules/to-readable-stream/package.json
+microservices/services/newservice3/node_modules/to-readable-stream/readme.md
+microservices/services/newservice3/node_modules/to-regex-range/LICENSE
+microservices/services/newservice3/node_modules/to-regex-range/README.md
+microservices/services/newservice3/node_modules/to-regex-range/index.js
+microservices/services/newservice3/node_modules/to-regex-range/package.json
+microservices/services/newservice3/node_modules/toidentifier/HISTORY.md
+microservices/services/newservice3/node_modules/toidentifier/LICENSE
+microservices/services/newservice3/node_modules/toidentifier/README.md
+microservices/services/newservice3/node_modules/toidentifier/index.js
+microservices/services/newservice3/node_modules/toidentifier/package.json
+microservices/services/newservice3/node_modules/touch/LICENSE
+microservices/services/newservice3/node_modules/touch/README.md
+microservices/services/newservice3/node_modules/touch/bin/nodetouch.js
+microservices/services/newservice3/node_modules/touch/index.js
+microservices/services/newservice3/node_modules/touch/package.json
+microservices/services/newservice3/node_modules/type-fest/base.d.ts
+microservices/services/newservice3/node_modules/type-fest/index.d.ts
+microservices/services/newservice3/node_modules/type-fest/license
+microservices/services/newservice3/node_modules/type-fest/package.json
+microservices/services/newservice3/node_modules/type-fest/readme.md
+microservices/services/newservice3/node_modules/type-fest/source/async-return-type.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/asyncify.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/basic.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/conditional-except.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/conditional-keys.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/conditional-pick.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/entries.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/entry.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/except.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/fixed-length-array.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/iterable-element.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/literal-union.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/merge-exclusive.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/merge.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/mutable.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/opaque.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/package-json.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/partial-deep.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/promisable.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/promise-value.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/readonly-deep.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/require-at-least-one.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/require-exactly-one.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/set-optional.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/set-required.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/set-return-type.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/stringified.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/tsconfig-json.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/union-to-intersection.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/utilities.d.ts
+microservices/services/newservice3/node_modules/type-fest/source/value-of.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/camel-case.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/delimiter-case.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/index.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/kebab-case.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/pascal-case.d.ts
+microservices/services/newservice3/node_modules/type-fest/ts41/snake-case.d.ts
+microservices/services/newservice3/node_modules/type-is/HISTORY.md
+microservices/services/newservice3/node_modules/type-is/LICENSE
+microservices/services/newservice3/node_modules/type-is/README.md
+microservices/services/newservice3/node_modules/type-is/index.js
+microservices/services/newservice3/node_modules/type-is/package.json
+microservices/services/newservice3/node_modules/typedarray-to-buffer/.airtap.yml
+microservices/services/newservice3/node_modules/typedarray-to-buffer/.travis.yml
+microservices/services/newservice3/node_modules/typedarray-to-buffer/LICENSE
+microservices/services/newservice3/node_modules/typedarray-to-buffer/README.md
+microservices/services/newservice3/node_modules/typedarray-to-buffer/index.js
+microservices/services/newservice3/node_modules/typedarray-to-buffer/package.json
+microservices/services/newservice3/node_modules/typedarray-to-buffer/test/basic.js
+microservices/services/newservice3/node_modules/undefsafe/.github/workflows/release.yml
+microservices/services/newservice3/node_modules/undefsafe/.jscsrc
+microservices/services/newservice3/node_modules/undefsafe/.jshintrc
+microservices/services/newservice3/node_modules/undefsafe/.travis.yml
+microservices/services/newservice3/node_modules/undefsafe/LICENSE
+microservices/services/newservice3/node_modules/undefsafe/README.md
+microservices/services/newservice3/node_modules/undefsafe/example.js
+microservices/services/newservice3/node_modules/undefsafe/lib/undefsafe.js
+microservices/services/newservice3/node_modules/undefsafe/package.json
+microservices/services/newservice3/node_modules/unique-string/index.d.ts
+microservices/services/newservice3/node_modules/unique-string/index.js
+microservices/services/newservice3/node_modules/unique-string/license
+microservices/services/newservice3/node_modules/unique-string/package.json
+microservices/services/newservice3/node_modules/unique-string/readme.md
+microservices/services/newservice3/node_modules/unpipe/HISTORY.md
+microservices/services/newservice3/node_modules/unpipe/LICENSE
+microservices/services/newservice3/node_modules/unpipe/README.md
+microservices/services/newservice3/node_modules/unpipe/index.js
+microservices/services/newservice3/node_modules/unpipe/package.json
+microservices/services/newservice3/node_modules/update-notifier/check.js
+microservices/services/newservice3/node_modules/update-notifier/index.js
+microservices/services/newservice3/node_modules/update-notifier/license
+microservices/services/newservice3/node_modules/update-notifier/node_modules/.bin/semver
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/CHANGELOG.md
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/LICENSE
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/README.md
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/bin/semver.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/classes/comparator.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/classes/index.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/classes/range.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/classes/semver.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/clean.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/cmp.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/coerce.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/compare-build.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/compare-loose.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/compare.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/diff.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/eq.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/gt.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/gte.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/inc.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/lt.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/lte.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/major.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/minor.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/neq.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/parse.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/patch.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/prerelease.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/rcompare.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/rsort.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/satisfies.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/sort.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/functions/valid.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/index.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/internal/constants.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/internal/debug.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/internal/identifiers.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/internal/parse-options.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/internal/re.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/package.json
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/preload.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/range.bnf
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/gtr.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/intersects.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/ltr.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/max-satisfying.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/min-satisfying.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/min-version.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/outside.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/simplify.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/subset.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/to-comparators.js
+microservices/services/newservice3/node_modules/update-notifier/node_modules/semver/ranges/valid.js
+microservices/services/newservice3/node_modules/update-notifier/package.json
+microservices/services/newservice3/node_modules/update-notifier/readme.md
+microservices/services/newservice3/node_modules/url-parse-lax/index.js
+microservices/services/newservice3/node_modules/url-parse-lax/license
+microservices/services/newservice3/node_modules/url-parse-lax/package.json
+microservices/services/newservice3/node_modules/url-parse-lax/readme.md
+microservices/services/newservice3/node_modules/utils-merge/.npmignore
+microservices/services/newservice3/node_modules/utils-merge/LICENSE
+microservices/services/newservice3/node_modules/utils-merge/README.md
+microservices/services/newservice3/node_modules/utils-merge/index.js
+microservices/services/newservice3/node_modules/utils-merge/package.json
+microservices/services/newservice3/node_modules/vary/HISTORY.md
+microservices/services/newservice3/node_modules/vary/LICENSE
+microservices/services/newservice3/node_modules/vary/README.md
+microservices/services/newservice3/node_modules/vary/index.js
+microservices/services/newservice3/node_modules/vary/package.json
+microservices/services/newservice3/node_modules/which/CHANGELOG.md
+microservices/services/newservice3/node_modules/which/LICENSE
+microservices/services/newservice3/node_modules/which/README.md
+microservices/services/newservice3/node_modules/which/bin/which
+microservices/services/newservice3/node_modules/which/package.json
+microservices/services/newservice3/node_modules/which/which.js
+microservices/services/newservice3/node_modules/widest-line/index.d.ts
+microservices/services/newservice3/node_modules/widest-line/index.js
+microservices/services/newservice3/node_modules/widest-line/license
+microservices/services/newservice3/node_modules/widest-line/package.json
+microservices/services/newservice3/node_modules/widest-line/readme.md
+microservices/services/newservice3/node_modules/wrap-ansi/index.js
+microservices/services/newservice3/node_modules/wrap-ansi/license
+microservices/services/newservice3/node_modules/wrap-ansi/package.json
+microservices/services/newservice3/node_modules/wrap-ansi/readme.md
+microservices/services/newservice3/node_modules/wrappy/LICENSE
+microservices/services/newservice3/node_modules/wrappy/README.md
+microservices/services/newservice3/node_modules/wrappy/package.json
+microservices/services/newservice3/node_modules/wrappy/wrappy.js
+microservices/services/newservice3/node_modules/write-file-atomic/CHANGELOG.md
+microservices/services/newservice3/node_modules/write-file-atomic/LICENSE
+microservices/services/newservice3/node_modules/write-file-atomic/README.md
+microservices/services/newservice3/node_modules/write-file-atomic/index.js
+microservices/services/newservice3/node_modules/write-file-atomic/package.json
+microservices/services/newservice3/node_modules/xdg-basedir/index.d.ts
+microservices/services/newservice3/node_modules/xdg-basedir/index.js
+microservices/services/newservice3/node_modules/xdg-basedir/license
+microservices/services/newservice3/node_modules/xdg-basedir/package.json
+microservices/services/newservice3/node_modules/xdg-basedir/readme.md
+microservices/services/newservice3/node_modules/yallist/LICENSE
+microservices/services/newservice3/node_modules/yallist/README.md
+microservices/services/newservice3/node_modules/yallist/iterator.js
+microservices/services/newservice3/node_modules/yallist/package.json
+microservices/services/newservice3/node_modules/yallist/yallist.js
+microservices/services/newservice3/package-lock.json
+microservices/services/newservice3/package.json
+microservices/services/newservice3/server.js</string>
+        </entry>
+        <entry>
+          <string>folders</string>
+          <string></string>
+        </entry>
+        <entry>
+          <string>folders_new</string>
+          <string>newservice3,</string>
+        </entry>
+        <entry>
+          <string>modifiedFiles</string>
+          <string>.DS_Store
+microservices/.DS_Store
+microservices/docker-compose.yml
+microservices/services/.DS_Store</string>
+        </entry>
+      </env>
+    </org.jenkinsci.plugins.workflow.cps.EnvActionImpl>
+    <com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder plugin="credentials@1074.v60e6c29b_b_44b_">
+      <boundCredentials class="concurrent-hash-map"/>
+    </com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder>
+  </actions>
+  <queueId>13</queueId>
+  <timestamp>1649173855655</timestamp>
+  <startTime>1649173855678</startTime>
+  <result>SUCCESS</result>
+  <duration>48076</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <execution class="org.jenkinsci.plugins.workflow.cps.CpsFlowExecution">
+    <result>SUCCESS</result>
+    <script>def obtainChanges(){
+    def arr_new = env.addFiles.split(&apos;\n&apos;)
+    result_new = &apos;&apos;
+    def tempResult_new = &apos;&apos;;
+    def folders_new = &apos;&apos;;
+    for(int i = 0; i &lt; arr_new.length;i++){
+        def file_new = arr_new[i]
+        if(file_new.startsWith(&apos;microservices/services/&apos;)){
+            result_new = &quot;${result_new}${file_new},&quot;
+        }
+    }
+    def arr_comma_new = result_new.split(&quot;,&quot;)
+    for (int j = 0; j &lt; arr_comma_new.length; j++) {
+            def folderDirectory_new = arr_comma_new[j].split(&apos;/&apos;)
+            for(int z = 0; z &lt; folderDirectory_new.length; z++){
+            if(folderDirectory_new[z] == &quot;services&quot; &amp;&amp; z+1 &lt; folderDirectory_new.length &amp;&amp; folderDirectory_new[z+1] != &quot;.DS_Store&quot;){
+                tempResult_new = &quot;${tempResult_new}${folderDirectory_new[z+1]} &quot;
+                break
+            }
+        }
+    }
+
+    def resultS_new = tempResult_new.tokenize(&apos; &apos;)
+    resultS_new = resultS_new.unique()
+    for(int i = 0; i &lt; resultS_new.size(); i++){
+        folders_new=&quot;${folders_new}${resultS_new[i]},&quot;
+    }
+    echo &quot;new: ${folders_new}&quot;
+    env.folders_new =  &quot;${folders_new}&quot;
+
+    def arr = env.modifiedFiles.split(&apos;\n&apos;)
+    result = &apos;&apos;
+    def tempResult = &apos;&apos;;
+    def folders = &apos;&apos;;
+    for(int i = 0; i &lt; arr.length;i++){
+        def file = arr[i]
+        if(file.startsWith(&apos;microservices/services/&apos;)){
+            result = &quot;${result}${file},&quot;
+        }
+    }
+    def arr_comma = result.split(&quot;,&quot;)
+    for (int j = 0; j &lt; arr_comma.length; j++) {
+            def folderDirectory = arr_comma[j].split(&apos;/&apos;)
+            for(int z = 0; z &lt; folderDirectory.length; z++){
+            if(folderDirectory[z] == &quot;services&quot; &amp;&amp; z+1 &lt; folderDirectory.length &amp;&amp; folderDirectory[z+1] != &quot;.DS_Store&quot;){
+                tempResult = &quot;${tempResult}${folderDirectory[z+1]} &quot;
+                break
+            }
+        }
+    }
+
+    def resultS = tempResult.tokenize(&apos; &apos;)
+    resultS = resultS.unique()
+    for(int i = 0; i &lt; resultS.size(); i++){
+        folders=&quot;${folders}${resultS[i]},&quot;
+    }
+    echo &quot;modified: ${folders}&quot;
+    env.folders =  &quot;${folders}&quot;
+}
+
+pipeline{
+    
+    agent any
+    environment{
+        dockerImage = &apos;&apos;
+        directory = &apos;./microservices/services/&apos;
+        registry = &apos;jh7939/microservices:&apos;
+        registry_mono = &apos;jh7939/monolithic:monolithic-app&apos;
+        registryCredential = &apos;dockerhub_id&apos;
+    }
+    
+    stages{
+        stage(&apos;Checkout&apos;){
+            steps{
+                checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://github.com/hxk1633/Microservices-Project&apos;]]])
+            }
+        }
+        stage(&apos;Microservice detect change&apos;){
+            steps{
+                script{
+                    env.addFiles = sh (
+                        script: &apos;git diff --diff-filter=A --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT &apos;,
+                        returnStdout: true).trim()
+                    env.modifiedFiles = sh (
+                        script: &apos;git diff --diff-filter=M --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT &apos;,
+                        returnStdout: true).trim()
+                }
+                obtainChanges()
+            }
+        }
+        stage(&apos;Microservice Build and upload Docker image(modified)&apos;){
+            steps{
+                script{
+                    if(env.folders != &apos;&apos;){
+                        try{
+                            def arr = env.folders.split(&apos;,&apos;)
+                            for(int i = 0; i &lt;arr.length; i++){
+                                dir(&quot;${directory}${arr[i]}&quot;){
+                                    dockerName = &quot;${registry}${arr[i]}_microservice&quot;
+                                    dockerImage = docker.build dockerName
+                                    docker.withRegistry(&apos;&apos;, registryCredential){
+                                        dockerImage.push()
+                                    }
+                                }
+                            }
+                        }catch(Exception e){
+                            echo &quot;Microservice Build and upload Docker image(modified) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                        }
+                    }
+                }
+            }
+        }
+
+        stage(&apos;Microservice Build and upload Docker image(add)&apos;){
+            steps{
+                script{
+                    if(env.folders_new != &apos;&apos;){
+                        try{
+                            def arr_new = env.folders_new.split(&apos;,&apos;)
+                            for(int i = 0; i &lt;arr_new.length; i++){
+                                dir(&quot;${directory}${arr_new[i]}&quot;){
+                                    echo arr_new[i]
+                                    dockerName = &quot;${registry}${arr_new[i]}_microservice&quot;
+                                    dockerImage = docker.build dockerName
+                                    docker.withRegistry(&apos;&apos;, registryCredential){
+                                        dockerImage.push()
+                                        }
+                                    }
+                                }
+                        } catch(Exception e){
+                            echo &quot;Microservice Build and upload Docker image(add) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                        }
+                    }
+                }
+            }
+        }
+        stage(&apos;Microservice task (modified)&apos;){
+            steps{
+                script{
+                    try{
+                        if(env.folders != &apos;&apos; ){
+                            dir(&quot;./microservices&quot;){
+                                flag = &quot;edit&quot;
+                                sh &quot;bash helper.sh ${env.folders} ${flag}&quot; 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo &quot;Microservice task (modified) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                    }
+                }
+            }
+        }
+
+        stage(&apos;Microservice task (add)&apos;){
+            steps{
+                script{
+                    try{
+                        if(env.folders_new != &apos;&apos;){
+                            dir(&quot;./microservices&quot;){
+                                flag_new = &quot;new&quot;
+                                sh &quot;bash helper.sh ${env.folders_new} ${flag_new}&quot; 
+                            }
+                        }
+                    }catch(Exception e){
+                            echo &quot;Microservice task (add) failed&quot;
+                            currentBuild.result = &apos;FAILURE&apos;
+                    }
+                }
+            }
+        }
+        // stage(&apos;Monolithic detect changes, build ,and push images&apos;){
+        //     when{
+        //         changeset &quot;monolithic-app/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             try{
+        //                 dir(&quot;monolithic-app&quot;){
+        //                     dockerImage = docker.build registry_mono
+        //                     docker.withRegistry(&apos;&apos;, registryCredential){
+        //                                 dockerImage.push()
+        //                     }
+        //                 }
+        //             }catch(Exception e){
+        //                     echo &quot;Monolithic detect failed&quot;
+        //                     currentBuild.result = &apos;FAILURE&apos;
+        //             }
+        //         }
+        //     }
+        // }
+        // stage(&apos;Monolithic task&apos;){
+        //     when{
+        //         changeset &quot;monolithic-app/*&quot;
+        //     }
+        //     steps{
+        //         script{
+        //             try{
+        //                 dir(&quot;monolithic-app&quot;){
+        //                 sh &quot;bash sshlogin.sh&quot;
+        //                 }
+        //             }catch(Exception e){
+        //                 echo &quot;Monolithic task failed&quot;
+        //                 currentBuild.result = &apos;FAILURE&apos;
+        //             }
+        //         }
+        //     }
+        // }
+    }
+}
+</script>
+    <loadedScripts class="map"/>
+    <durabilityHint>MAX_SURVIVABILITY</durabilityHint>
+    <timings class="map">
+      <entry>
+        <string>flowNode</string>
+        <long>3602553317</long>
+      </entry>
+      <entry>
+        <string>classLoad</string>
+        <long>475261721</long>
+      </entry>
+      <entry>
+        <string>run</string>
+        <long>12473864591</long>
+      </entry>
+      <entry>
+        <string>parse</string>
+        <long>198681250</long>
+      </entry>
+      <entry>
+        <string>saveProgram</string>
+        <long>3320914667</long>
+      </entry>
+    </timings>
+    <sandbox>true</sandbox>
+    <iota>105</iota>
+    <head>1:105</head>
+    <done>true</done>
+    <resumeBlocked>false</resumeBlocked>
+  </execution>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList">
+    <org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+      <scm class="hudson.plugins.git.GitSCM" plugin="git@4.10.3">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>https://github.com/hxk1633/Microservices-Project</url>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="empty-list"/>
+        <extensions/>
+      </scm>
+      <node></node>
+      <workspace>/Users/jianhe/.jenkins/workspace/jenkinsMicro</workspace>
+      <changelogFile>/Users/jianhe/.jenkins/jobs/jenkinsMicro/builds/396/changelog17521381809415920140.xml</changelogFile>
+      <pollingBaseline class="hudson.scm.SCMRevisionState$None" reference="../../../actions/org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState/revisionStates/entry/hudson.scm.SCMRevisionState_-None"/>
+    </org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+    <org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+      <scm class="hudson.plugins.git.GitSCM" plugin="git@4.10.3">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>https://github.com/hxk1633/Microservices-Project</url>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="empty-list"/>
+        <extensions/>
+      </scm>
+      <node></node>
+      <workspace>/Users/jianhe/.jenkins/workspace/jenkinsMicro</workspace>
+      <pollingBaseline class="hudson.scm.SCMRevisionState$None" reference="../../../actions/org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState/revisionStates/entry/hudson.scm.SCMRevisionState_-None"/>
+    </org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+  </checkouts>
+</flow-build>

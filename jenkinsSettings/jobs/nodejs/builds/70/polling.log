@@ -1,0 +1,79 @@
+Started on Mar 5, 2022, 8:33:03 PM
+Started by event from 140.82.115.102 ⇒ https://af15-98-3-19-184.ngrok.io:8080/github-webhook/ on Sat Mar 05 20:33:03 EST 2022
+Using strategy: Default
+[poll] Last Built Revision: Revision 87cd14b33326139d0b418846c9c19d9ea6253a25 (refs/remotes/origin/test)
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git --version # timeout=10
+ > git --version # 'git version 2.31.1'
+ > git ls-remote -h -- https://github.com/noddyc/MicroProject/ # timeout=10
+Found 3 remote heads on https://github.com/noddyc/MicroProject/
+[poll] Latest remote head revision on refs/heads/test is: 96bce34e6fabbde49a1b094e61eceb1b17eafdef
+Using strategy: Default
+[poll] Last Built Revision: Revision 410b0679d4cac36ea4677583e0827eeeee5a225a (refs/remotes/origin/tools)
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /Users/jianhe/.jenkins/workspace/nodejs/.git # timeout=10
+Fetching changes from the remote Git repositories
+ > git config remote.origin.url https://github.com/noddyc/MicroProject # timeout=10
+Fetching upstream changes from https://github.com/noddyc/MicroProject
+ > git --version # timeout=10
+ > git --version # 'git version 2.31.1'
+ > git fetch --tags --force --progress -- https://github.com/noddyc/MicroProject +refs/heads/*:refs/remotes/origin/* # timeout=10
+Polling for changes in
+ > git rev-parse refs/remotes/origin/test^{commit} # timeout=10
+ > git log --full-history --no-abbrev --format=raw -M -m --raw 410b0679d4cac36ea4677583e0827eeeee5a225a..96bce34e6fabbde49a1b094e61eceb1b17eafdef # timeout=10
+Ignored commit 96bce34e6fabbde49a1b094e61eceb1b17eafdef: No paths matched included region whitelist
+Ignored commit 87cd14b33326139d0b418846c9c19d9ea6253a25: No paths matched included region whitelist
+Ignored commit 7dd168c441a0d41fe84b8344d07f9c52e9dd8dc3: No paths matched included region whitelist
+Ignored commit 3d58c9deb01366a1485901ba6d86f618394a2e80: No paths matched included region whitelist
+Ignored commit f046571c23a8171e395e5a5d619a2d9523fd8c7d: No paths matched included region whitelist
+Ignored commit 955f74007b3580d1866da1ceb3f1d6ebc2f152f8: No paths matched included region whitelist
+Ignored commit aeed99bda84b7d60ead44c42b919140687f374cb: No paths matched included region whitelist
+Ignored commit 92bc03dc83f5ca6c382ccf4b694da433bf70fe0e: No paths matched included region whitelist
+Ignored commit 02057fde061ffa104659ac9754651c36ec4ad41d: No paths matched included region whitelist
+Ignored commit 02057fde061ffa104659ac9754651c36ec4ad41d: No paths matched included region whitelist
+Ignored commit 70fba1a8e8b54e2adffa3d61da9a92d937d4ee2d: No paths matched included region whitelist
+Ignored commit d5bf20c8d187a912b7efca7f90d80421d9c6f597: No paths matched included region whitelist
+Ignored commit 129c66d316dce8288f16d78ac657b1f6c8a1f5ce: No paths matched included region whitelist
+Ignored commit 89fd06012e7ac0ce2d7038149b65357940cd29e8: No paths matched included region whitelist
+Ignored commit 6c89311dda1d5f6b4629e5761439b3ecdc13cc06: No paths matched included region whitelist
+Ignored commit a25531d0a67ea3eb68f32850c2a8a79f3cade3be: No paths matched included region whitelist
+Ignored commit e4846ff8ea74f602c76f5f50cf38ef13a20289df: No paths matched included region whitelist
+Ignored commit 12b56692835585f82a5ff4a938392dd130693da6: No paths matched included region whitelist
+Ignored commit df189eda3d1c6fe9cf3373d100da45ae30d401ec: No paths matched included region whitelist
+Ignored commit b7a28d89768f10973ef5cc2d5bd898e0796a262e: No paths matched included region whitelist
+Ignored commit af36eb249442f799dc3d7b1dca225aa969330f41: No paths matched included region whitelist
+Ignored commit 72eb54f1f95552734651445272f91bec4920d48a: No paths matched included region whitelist
+Ignored commit 66d9d6b8538685e7681047e068d99cb95590cf5a: No paths matched included region whitelist
+Ignored commit ba4794ac5e4b24e15cec2ba9ecb88c07077ddc04: No paths matched included region whitelist
+Ignored commit ff7de72d4e7e0ea6d6410ee1f42ce2fae42fada6: No paths matched included region whitelist
+Ignored commit 599f2221a23ff27a0d0c109a9dd7e7a4557abc05: No paths matched included region whitelist
+Ignored commit bfce74a02b2aa258674a98c231da4bdab1d1fa19: No paths matched included region whitelist
+Ignored commit c1f1113788298267a8ba23bbd0c2265c2aba6cef: No paths matched included region whitelist
+Ignored commit 559b3a8ca150f0fabbb2554418e2deae5c8a08e4: No paths matched included region whitelist
+Ignored commit cce3f7a2c3882125e65f8605d343d0c067358b57: No paths matched included region whitelist
+Ignored commit 9ac6c652b952a75f5d46b148a48afc4b589f0a39: No paths matched included region whitelist
+Ignored commit eb708348da746ba169e651d64a96d5f62a570958: No paths matched included region whitelist
+Ignored commit 84b1f4a8e41d9ea530e528d73714ccd1bee86b64: No paths matched included region whitelist
+Ignored commit 7ac869f9045798de150c6392c5c49e56244b2c6b: No paths matched included region whitelist
+Ignored commit a761bfdfa53e451d5fe28c19f23cc42a49f67858: No paths matched included region whitelist
+Ignored commit efaf8d5827549dfe5b201273468fe946e7dc1752: No paths matched included region whitelist
+Ignored commit 811485d0d219b44fa87b14b70a2bac4eb47f9b6b: No paths matched included region whitelist
+Ignored commit 0bc9ba184f66c2d95026bbb02fe7050791168412: No paths matched included region whitelist
+Ignored commit 975f19ca30273efa0765ed31bec00e0ad9ee0eb7: No paths matched included region whitelist
+Ignored commit 3f063300d0cfbc782c425c34945335029403771d: No paths matched included region whitelist
+Ignored commit ee3c3ddf734c8b69342f7ee0792688cbbb7e223b: No paths matched included region whitelist
+Ignored commit 2f3c036aaa124ef0362fdf5484479bc237a1ee5c: No paths matched included region whitelist
+Ignored commit ec70d20dda9b5699ff9d542fd75686f2841b6110: No paths matched included region whitelist
+Ignored commit d03a16c36b6890fe78d32b8031489ef4f4500ed3: No paths matched included region whitelist
+Ignored commit 7b148e8f41ba76551ab4fe7fec754d558d1f6d84: No paths matched included region whitelist
+Ignored commit eee66331eba54b348a902c32dbd09d7d1eea0a41: No paths matched included region whitelist
+Ignored commit 2ec5dcc397bc762a1fdfbec156262bba5bb40666: No paths matched included region whitelist
+Ignored commit 6b3126f9fd7f48af96360a82d71d04cf9d9bf094: No paths matched included region whitelist
+Ignored commit 255c4e87f20608ecc6a69a3673af5041710bb3e1: No paths matched included region whitelist
+Ignored commit 80680022d902ae8ce78c350ee927d21e248f637a: No paths matched included region whitelist
+Done. Took 1.1 sec
+Changes found

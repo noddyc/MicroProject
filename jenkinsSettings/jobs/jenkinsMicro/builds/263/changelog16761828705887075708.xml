@@ -1,0 +1,11 @@
+commit 58ace4cfd74d2f28f83138cb2ff15389a29c0263
+tree 3382730dcccaf85af408b93715dac45fc3b8550f
+parent 334824eee1f5aeaa33599e225e5ebd9f733acf12
+author jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-25 20:44:08 -0400
+committer jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-03-25 20:44:08 -0400
+
+    1
+
+
+:100644 100644 53773230788c2afd42727333f978327b0b014840 a6b2261353f87113b7ea64933ce48f2981337021 M	Jenkinsfile
+:100644 100644 4ac9b99fb5e9c72bafaa5dca68f4938a1c1f4062 dc001ee2f25896ca63a8c16a5c5432cfe68e0a8f M	microservices/services/newservice/abc.txt
