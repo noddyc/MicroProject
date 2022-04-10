@@ -1,5 +1,5 @@
-# _md5hash=f74fa08f48d8dac88fee67e73755134a
-# _version=83
+# _md5hash=374b21d7e533866a52c6a8e7289bf016
+# _version=84
 # Dataplaneapi managed File
 # changing file directly can cause a conflict if dataplaneapi is running
 
@@ -24,6 +24,7 @@ resolvers docker
 
 frontend api_gateway
   bind :80
+  acl PATH_newservice5 path_beg -i /api/newservice5
   acl PATH_newservice3 path_beg -i /api/newservice3
   acl PATH_newservice2 path_beg -i /api/newservice2
   acl PATH_newservice2 path_beg -i /api/newservice2
@@ -37,6 +38,7 @@ frontend api_gateway
   acl PATH_users path_beg -i /api/users
   acl PATH_posts path_beg -i /api/posts
   acl PATH_threads path_beg -i /api/threads
+  use_backend be_newservice5 if PATH_newservice5
   use_backend be_newservice3 if PATH_newservice3
   use_backend be_newservice2 if PATH_newservice2
   use_backend be_newservice2 if PATH_newservice2
@@ -72,6 +74,10 @@ backend be_newservice3
 backend be_newservice4
   balance roundrobin
   server-template microservices-newservice4- 20 newservice4:3000 check init-addr libc,none resolvers docker
+
+backend be_newservice5
+  balance roundrobin
+  server-template microservices-newservice5- 20 newservice5:3000 check init-addr libc,none resolvers docker
 
 backend be_posts
   balance roundrobin
