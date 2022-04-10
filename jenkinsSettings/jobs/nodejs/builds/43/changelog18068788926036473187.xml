@@ -1,9 +1,0 @@
-commit c1f1113788298267a8ba23bbd0c2265c2aba6cef
-tree 3b28e0a56d4c31488c828a7b9e11d78132532ac7
-parent 559b3a8ca150f0fabbb2554418e2deae5c8a08e4
-author jianhe2git <59978308+noddyc@users.noreply.github.com> 2022-02-26 21:59:59 -0500
-committer GitHub <noreply@github.com> 2022-02-26 21:59:59 -0500
-
-    Update Jenkinsfile
-
-:100644 100644 d85d5b91925e61c045265904c6a1e365c5a2a7dc 22e9396fb9f5001040139c98de905d44dd344994 M	Jenkinsfile

@@ -14,7 +14,8 @@ RUN curl -L -o /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1
 RUN chmod +x /usr/bin/jq
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-COPY config.xml /usr/share/jenkins/ref/jobs/jenkinsMicro/config.xml
+COPY ./micro/config.xml /usr/share/jenkins/ref/jobs/jenkinsMicro/config.xml
+COPY ./mono/config.xml /usr/share/jenkins/ref/jobs/jenkinsMono/config.xml
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY casc.yaml /var/jenkins_home/casc.yaml
 COPY credentials.xml /var/jenkins_home/credentials.xml

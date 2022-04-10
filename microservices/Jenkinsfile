@@ -176,39 +176,80 @@ pipeline{
                 }
             }
         }
-        // stage('Monolithic detect changes, build ,and push images'){
-        //     when{
-        //         changeset "monolithic-app/*"
+        // --------
+        // stage('Microservice Build and upload Docker image(add)'){
+        //     steps{
+        //         script{
+        //             if("${NEW_SERVICE}" != ''){
+        //                 try{
+        //                     dir("${directory}${NEW_SERVICE}"){
+        //                         dockerName = "${registry}${NEW_SERVICE}_microservice"
+        //                         dockerImage = docker.build dockerName
+        //                         docker.withRegistry('', registryCredential){
+        //                             dockerImage.push()
+        //                             }
+        //                     }
+        //                 } catch(Exception e){
+        //                     echo "Microservice Build and upload Docker image(add) failed"
+        //                     currentBuild.result = 'FAILURE'
+        //                 }
+        //             }
+        //         }
         //     }
+        // }
+
+        // stage('Microservice Build and upload Docker image(modified)'){
+        //     steps{
+        //         script{
+        //             if("${MODIFIED_SERVICE}" != ''){
+        //                 try{
+        //                     dir("${directory}${MODIFIED_SERVICE}"){
+        //                         dockerName = "${registry}${MODIFIED_SERVICE}_microservice"
+        //                         dockerImage = docker.build dockerName
+        //                         docker.withRegistry('', registryCredential){
+        //                             dockerImage.push()
+        //                             }
+        //                     }
+        //                 }catch(Exception e){
+        //                     echo "Microservice Build and upload Docker image(modified) failed"
+        //                     currentBuild.result = 'FAILURE'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('Microservice task (modified)'){
         //     steps{
         //         script{
         //             try{
-        //                 dir("monolithic-app"){
-        //                     dockerImage = docker.build registry_mono
-        //                     docker.withRegistry('', registryCredential){
-        //                                 dockerImage.push()
+        //                 if("${MODIFIED_SERVICE}" != '' ){
+        //                     dir("./microservices"){
+        //                         flag = "edit"
+        //                         sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
         //                     }
         //                 }
         //             }catch(Exception e){
-        //                     echo "Monolithic detect failed"
+        //                     echo "Microservice task (modified) failed"
         //                     currentBuild.result = 'FAILURE'
         //             }
         //         }
         //     }
         // }
-        // stage('Monolithic task'){
-        //     when{
-        //         changeset "monolithic-app/*"
-        //     }
+
+        // stage('Microservice task (add)'){
         //     steps{
         //         script{
         //             try{
-        //                 dir("monolithic-app"){
-        //                 sh "bash sshlogin.sh"
+        //                 if("${NEW_SERVICE}" != ''){
+        //                     dir("./microservices"){
+        //                         flag_new = "new"
+        //                         sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
+        //                     }
         //                 }
         //             }catch(Exception e){
-        //                 echo "Monolithic task failed"
-        //                 currentBuild.result = 'FAILURE'
+        //                     echo "Microservice task (add) failed"
+        //                     currentBuild.result = 'FAILURE'
         //             }
         //         }
         //     }

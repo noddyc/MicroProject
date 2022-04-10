@@ -1,0 +1,60 @@
+version: "3.9"
+services:
+  users:
+    build: $PWD/services/users
+    image: users
+    networks:
+      - my-network
+    healthcheck:
+      test: curl --fail http://localhost/api/users || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  threads:
+    build: $PWD/services/threads
+    image: threads
+    networks:
+      - my-network
+    healthcheck:
+      test: curl --fail http://localhost/api/threads || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  posts:
+    build: $PWD/services/posts
+    image: posts
+    networks:
+      - my-network
+    healthcheck:
+      test: curl --fail http://localhost/api/posts || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  comments:
+    build: $PWD/services/comments
+    image: comments
+    networks:
+      - my-network
+    healthcheck:
+      test: curl --fail http://localhost/api/comments || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  haproxy:
+    build: $PWD/haproxy
+    image: haproxy
+    networks:
+      - my-network
+    ports:
+      - "80:80"
+      - "8404:8404"
+      - "5555:5555"
+    volumes:
+      - "./haproxy:/usr/local/etc/haproxy:rw"
+networks:
+  my-network:
+    driver: bridge

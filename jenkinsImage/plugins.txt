@@ -93,3 +93,4 @@ workflow-support:latest
 junit:latest
 ws-cleanup:latest
 ldap:latest
+build-name-setter:latest

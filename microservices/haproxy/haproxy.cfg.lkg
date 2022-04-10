@@ -1,5 +1,5 @@
-# _md5hash=39448a6f163f9483b899f7a162ad108e
-# _version=72
+# _md5hash=5e9f7f4a0cafe94f6725ec5d6f310d76
+# _version=75
 # Dataplaneapi managed File
 # changing file directly can cause a conflict if dataplaneapi is running
 
@@ -24,156 +24,16 @@ resolvers docker
 
 frontend api_gateway
   bind :80
-  # acl PATH_newservice4 path_beg -i /api/newservice4
-  # acl PATH_newservice3 path_beg -i /api/newservice3
-  # acl PATH_newservice3 path_beg -i /api/newservice3
-  # acl PATH_newservice3 path_beg -i /api/newservice3
   acl PATH_newservice2 path_beg -i /api/newservice2
-  acl PATH_newservice7 path_beg -i /api/newservice7
-  acl PATH_newservice3 path_beg -i /api/newservice3
-  acl PATH_newservice3 path_beg -i /api/newservice3
-  acl PATH_newservice2 path_beg -i /api/newservice2
-  acl PATH_newservice5 path_beg -i /api/newservice5
-  acl PATH_newservice2 path_beg -i /api/newservice2
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
   acl PATH_comments path_beg -i /api/comments
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
   acl PATH_users path_beg -i /api/users
   acl PATH_posts path_beg -i /api/posts
   acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_users path_beg -i /api/users
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_users path_beg -i /api/users
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_users path_beg -i /api/users
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_users path_beg -i /api/users
-  acl PATH_users path_beg -i /api/users
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_users path_beg -i /api/users
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_users path_beg -i /api/users
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_users path_beg -i /api/users
-  acl PATH_comments path_beg -i /api/comments
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_newservice path_beg -i /api/newservice
-  acl PATH_users path_beg -i /api/users
-  acl PATH_threads path_beg -i /api/threads
-  acl PATH_posts path_beg -i /api/posts
-  acl PATH_comments path_beg -i /api/comments
-  # use_backend be_newservice4 if PATH_newservice4
-  # use_backend be_newservice3 if PATH_newservice3
-  # use_backend be_newservice3 if PATH_newservice3
-  # use_backend be_newservice3 if PATH_newservice3
   use_backend be_newservice2 if PATH_newservice2
-  use_backend be_newservice7 if PATH_newservice7
-  use_backend be_newservice3 if PATH_newservice3
-  use_backend be_newservice3 if PATH_newservice3
-  use_backend be_newservice2 if PATH_newservice2
-  use_backend be_newservice5 if PATH_newservice5
-  use_backend be_newservice2 if PATH_newservice2
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_comments if PATH_comments
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_users if PATH_users
-  use_backend be_posts if PATH_posts
-  use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_newservice if PATH_newservice
-  use_backend be_posts if PATH_posts
-  use_backend be_newservice if PATH_newservice
-  use_backend be_users if PATH_users
-  use_backend be_posts if PATH_posts
-  use_backend be_newservice if PATH_newservice
-  use_backend be_comments if PATH_comments
-  use_backend be_threads if PATH_threads
-  use_backend be_users if PATH_users
-  use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_users if PATH_users
-  use_backend be_posts if PATH_posts
-  use_backend be_newservice if PATH_newservice
-  use_backend be_comments if PATH_comments
-  use_backend be_threads if PATH_threads
-  use_backend be_comments if PATH_comments
-  use_backend be_newservice if PATH_newservice
-  use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_users if PATH_users
-  use_backend be_users if PATH_users
-  use_backend be_comments if PATH_comments
-  use_backend be_newservice if PATH_newservice
-  use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_posts if PATH_posts
-  use_backend be_comments if PATH_comments
-  use_backend be_users if PATH_users
-  use_backend be_newservice if PATH_newservice
-  use_backend be_threads if PATH_threads
-  use_backend be_newservice if PATH_newservice
-  use_backend be_comments if PATH_comments
-  use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_users if PATH_users
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_posts if PATH_posts
   use_backend be_users if PATH_users
   use_backend be_comments if PATH_comments
   use_backend be_posts if PATH_posts
-  use_backend be_posts if PATH_posts
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_newservice if PATH_newservice
-  use_backend be_users if PATH_users
   use_backend be_threads if PATH_threads
-  use_backend be_posts if PATH_posts
-  use_backend be_comments if PATH_comments
 
 frontend stats
   bind *:8404
@@ -185,32 +45,10 @@ backend be_comments
   balance roundrobin
   server-template microservices-comments- 20 comments:3000 check resolvers docker init-addr libc,none
 
-backend be_newservice
-  balance roundrobin
-  server-template microservices-newservice- 20 newservice:3000 check init-addr libc,none resolvers docker
-
 backend be_newservice2
   balance roundrobin
   server-template microservices-newservice2- 20 newservice2:3000 check init-addr libc,none resolvers docker
 
-backend be_newservice3
-  balance roundrobin
-  server-template microservices-newservice3- 20 newservice3:3000 check init-addr libc,none resolvers docker
-
-backend be_newservice5
-  balance roundrobin
-  server-template microservices-newservice5- 20 newservice5:3000 check init-addr libc,none resolvers docker
-
-backend be_newservice7
-  balance roundrobin
-  server-template microservices-newservice7- 20 newservice7:3000 check init-addr libc,none resolvers docker
-
-# backend be_newservice3
-# balance roundrobin
-# server-template microservices-newservice3- 20 newservice3:3000 check init-addr libc,none resolvers docker
-# backend be_newservice4
-# balance roundrobin
-# server-template microservices-newservice4- 20 newservice4:3000 check init-addr libc,none resolvers docker
 backend be_posts
   balance roundrobin
   server-template microservices-posts- 20 posts:3000 check resolvers docker init-addr libc,none
