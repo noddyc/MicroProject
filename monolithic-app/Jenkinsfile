@@ -199,7 +199,7 @@ pipeline{
                 script{
                     try{
                         dir("monolithic-app"){
-                        sh "bash sshlogin.sh"
+                            sh "bash update_containers.sh monolith 4"
                         }
                     }catch(Exception e){
                         echo "Monolithic task failed"
