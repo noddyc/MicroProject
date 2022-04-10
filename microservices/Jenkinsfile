@@ -77,7 +77,9 @@ pipeline{
         }
         stage('Checkout'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                dir('./microservices/services'){
+                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
+                }
             }
         }
         // stage('Microservice detect change'){
