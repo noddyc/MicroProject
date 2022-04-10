@@ -80,6 +80,7 @@ pipeline{
                 script{
                     sh 'git fetch --all'
                     if("${MODIFIED_SERVICE}" != ''){
+                        sh "git checkout origin/main -- ./microservices/docker-compose.yml"
                         sh "git checkout origin/main -- ./microservices/services/${MODIFIED_SERVICE}/"
                     }
                     if("${NEW_SERVICE}" != ''){
