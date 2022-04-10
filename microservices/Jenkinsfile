@@ -79,7 +79,7 @@ pipeline{
             steps{
                 sh 'ls'
                 sh 'git fetch --all'
-                sh 'git checkout origin/master -- ./microservices/services/'
+                sh 'git checkout origin/main -- ./microservices/services/'
                 // dir('./microservices/services'){
                 //  checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
                 // }
