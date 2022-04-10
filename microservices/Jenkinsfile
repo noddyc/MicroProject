@@ -78,6 +78,8 @@ pipeline{
         stage('Checkout'){
             steps{
                 sh 'ls'
+                sh 'git fetch --all'
+                sh 'git checkout HEAD -- MicroProject/microservices/services'
                 // dir('./microservices/services'){
                 //  checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/noddyc/MicroProject']]])
                 // }
@@ -180,85 +182,85 @@ pipeline{
         //     }
         // }
         // --------
-        // stage('Microservice Build and upload Docker image(add)'){
-        //     steps{
-        //         script{
-        //             if("${NEW_SERVICE}" != ''){
-        //                 try{
-        //                     dir("${directory}${NEW_SERVICE}"){
-        //                         dockerName = "${registry}${NEW_SERVICE}_microservice"
-        //                         dockerImage = docker.build dockerName
-        //                         docker.withRegistry('', registryCredential){
-        //                             dockerImage.push()
-        //                             }
-        //                     }
-        //                 } catch(Exception e){
-        //                     echo "Microservice Build and upload Docker image(add) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Microservice Build and upload Docker image(add)'){
+            steps{
+                script{
+                    if("${NEW_SERVICE}" != ''){
+                        try{
+                            dir("${directory}${NEW_SERVICE}"){
+                                dockerName = "${registry}${NEW_SERVICE}_microservice"
+                                dockerImage = docker.build dockerName
+                                docker.withRegistry('', registryCredential){
+                                    dockerImage.push()
+                                    }
+                            }
+                        } catch(Exception e){
+                            echo "Microservice Build and upload Docker image(add) failed"
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
 
-        // stage('Microservice Build and upload Docker image(modified)'){
-        //     steps{
-        //         script{
-        //             if("${MODIFIED_SERVICE}" != ''){
-        //                 try{
-        //                     dir("${directory}${MODIFIED_SERVICE}"){
-        //                         dockerName = "${registry}${MODIFIED_SERVICE}_microservice"
-        //                         dockerImage = docker.build dockerName
-        //                         docker.withRegistry('', registryCredential){
-        //                             dockerImage.push()
-        //                             }
-        //                     }
-        //                 }catch(Exception e){
-        //                     echo "Microservice Build and upload Docker image(modified) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Microservice Build and upload Docker image(modified)'){
+            steps{
+                script{
+                    if("${MODIFIED_SERVICE}" != ''){
+                        try{
+                            dir("${directory}${MODIFIED_SERVICE}"){
+                                dockerName = "${registry}${MODIFIED_SERVICE}_microservice"
+                                dockerImage = docker.build dockerName
+                                docker.withRegistry('', registryCredential){
+                                    dockerImage.push()
+                                    }
+                            }
+                        }catch(Exception e){
+                            echo "Microservice Build and upload Docker image(modified) failed"
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
 
-        // stage('Microservice task (modified)'){
-        //     steps{
-        //         script{
-        //             try{
-        //                 if("${MODIFIED_SERVICE}" != '' ){
-        //                     dir("./microservices"){
-        //                         // flag = "edit"
-        //                         // sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
-        //                         sh "bash update_containers.sh ${MODIFIED_SERVICE} 4"
-        //                     }
-        //                 }
-        //             }catch(Exception e){
-        //                     echo "Microservice task (modified) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Microservice task (modified)'){
+            steps{
+                script{
+                    try{
+                        if("${MODIFIED_SERVICE}" != '' ){
+                            dir("./microservices"){
+                                // flag = "edit"
+                                // sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
+                                sh "bash update_containers.sh ${MODIFIED_SERVICE} 4"
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (modified) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
 
-        // stage('Microservice task (add)'){
-        //     steps{
-        //         script{
-        //             try{
-        //                 if("${NEW_SERVICE}" != ''){
-        //                     dir("./microservices"){
-        //                         // flag_new = "new"
-        //                         // sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
-        //                         sh "bash add_newservice.sh ${NEW_SERVICE}"
-        //                         sh "bash update_containers.sh ${NEW_SERVICE} 4"
-        //                     }
-        //                 }
-        //             }catch(Exception e){
-        //                     echo "Microservice task (add) failed"
-        //                     currentBuild.result = 'FAILURE'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Microservice task (add)'){
+            steps{
+                script{
+                    try{
+                        if("${NEW_SERVICE}" != ''){
+                            dir("./microservices"){
+                                // flag_new = "new"
+                                // sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
+                                sh "bash add_newservice.sh ${NEW_SERVICE}"
+                                sh "bash update_containers.sh ${NEW_SERVICE} 4"
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (add) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
     }
 }
