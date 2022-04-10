@@ -50,16 +50,6 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
-  newservice2:
-    image: jh7939/microservices:newservice2_microservice
-    networks:
-      - my-network
-    healthcheck:
-      test: curl --fail http://localhost/api/newservice2%7C%7C exit 1
-      interval: 60s
-      retries: 5
-      start_period: 20s
-      timeout: 10s
   haproxy:
     image: jh7939/microservices:haproxy
     networks:
