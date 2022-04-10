@@ -224,10 +224,10 @@ pipeline{
                 script{
                     try{
                         if("${MODIFIED_SERVICE}" != '' ){
-                            // dir("./microservices"){
+                            dir("./microservices"){
                                 flag = "edit"
                                 sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
-                            // }
+                            }
                         }
                     }catch(Exception e){
                             echo "Microservice task (modified) failed"
@@ -242,10 +242,10 @@ pipeline{
                 script{
                     try{
                         if("${NEW_SERVICE}" != ''){
-                            // dir("./microservices"){
+                            dir("./microservices"){
                                 flag_new = "new"
                                 sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
-                            // }
+                            }
                         }
                     }catch(Exception e){
                             echo "Microservice task (add) failed"
