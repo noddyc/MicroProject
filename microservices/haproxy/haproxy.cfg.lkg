@@ -1,5 +1,5 @@
-# _md5hash=30b108e23585f2ba2d25f5f7faa37046
-# _version=100
+# _md5hash=7296c7292f240e4ba8421255dc397838
+# _version=101
 # Dataplaneapi managed File
 # changing file directly can cause a conflict if dataplaneapi is running
 
@@ -24,6 +24,7 @@ resolvers docker
 
 frontend api_gateway
   bind :80
+  acl PATH_newservice3 path_beg -i /api/newservice3
   acl PATH_newservice2 path_beg -i /api/newservice2
   acl PATH_newservice8 path_beg -i /api/newservice8
   acl PATH_newservice7 path_beg -i /api/newservice7
@@ -54,6 +55,7 @@ frontend api_gateway
   acl PATH_users path_beg -i /api/users
   acl PATH_posts path_beg -i /api/posts
   acl PATH_threads path_beg -i /api/threads
+  use_backend be_newservice3 if PATH_newservice3
   use_backend be_newservice2 if PATH_newservice2
   use_backend be_newservice8 if PATH_newservice8
   use_backend be_newservice7 if PATH_newservice7
