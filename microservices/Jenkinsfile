@@ -1,62 +1,62 @@
-def obtainChanges(){
-    def arr_new = env.addFiles.split('\n')
-    result_new = ''
-    def tempResult_new = '';
-    def folders_new = '';
-    for(int i = 0; i < arr_new.length;i++){
-        def file_new = arr_new[i]
-        if(file_new.startsWith('microservices/services/')){
-            result_new = "${result_new}${file_new},"
-        }
-    }
-    def arr_comma_new = result_new.split(",")
-    for (int j = 0; j < arr_comma_new.length; j++) {
-            def folderDirectory_new = arr_comma_new[j].split('/')
-            for(int z = 0; z < folderDirectory_new.length; z++){
-            if(folderDirectory_new[z] == "services" && z+1 < folderDirectory_new.length && folderDirectory_new[z+1] != ".DS_Store"){
-                tempResult_new = "${tempResult_new}${folderDirectory_new[z+1]} "
-                break
-            }
-        }
-    }
+// def obtainChanges(){
+//     def arr_new = env.addFiles.split('\n')
+//     result_new = ''
+//     def tempResult_new = '';
+//     def folders_new = '';
+//     for(int i = 0; i < arr_new.length;i++){
+//         def file_new = arr_new[i]
+//         if(file_new.startsWith('microservices/services/')){
+//             result_new = "${result_new}${file_new},"
+//         }
+//     }
+//     def arr_comma_new = result_new.split(",")
+//     for (int j = 0; j < arr_comma_new.length; j++) {
+//             def folderDirectory_new = arr_comma_new[j].split('/')
+//             for(int z = 0; z < folderDirectory_new.length; z++){
+//             if(folderDirectory_new[z] == "services" && z+1 < folderDirectory_new.length && folderDirectory_new[z+1] != ".DS_Store"){
+//                 tempResult_new = "${tempResult_new}${folderDirectory_new[z+1]} "
+//                 break
+//             }
+//         }
+//     }
 
-    def resultS_new = tempResult_new.tokenize(' ')
-    resultS_new = resultS_new.unique()
-    for(int i = 0; i < resultS_new.size(); i++){
-        folders_new="${folders_new}${resultS_new[i]},"
-    }
-    echo "new: ${folders_new}"
-    env.folders_new =  "${folders_new}"
+//     def resultS_new = tempResult_new.tokenize(' ')
+//     resultS_new = resultS_new.unique()
+//     for(int i = 0; i < resultS_new.size(); i++){
+//         folders_new="${folders_new}${resultS_new[i]},"
+//     }
+//     echo "new: ${folders_new}"
+//     env.folders_new =  "${folders_new}"
 
-    def arr = env.modifiedFiles.split('\n')
-    result = ''
-    def tempResult = '';
-    def folders = '';
-    for(int i = 0; i < arr.length;i++){
-        def file = arr[i]
-        if(file.startsWith('microservices/services/')){
-            result = "${result}${file},"
-        }
-    }
-    def arr_comma = result.split(",")
-    for (int j = 0; j < arr_comma.length; j++) {
-            def folderDirectory = arr_comma[j].split('/')
-            for(int z = 0; z < folderDirectory.length; z++){
-            if(folderDirectory[z] == "services" && z+1 < folderDirectory.length && folderDirectory[z+1] != ".DS_Store"){
-                tempResult = "${tempResult}${folderDirectory[z+1]} "
-                break
-            }
-        }
-    }
+//     def arr = env.modifiedFiles.split('\n')
+//     result = ''
+//     def tempResult = '';
+//     def folders = '';
+//     for(int i = 0; i < arr.length;i++){
+//         def file = arr[i]
+//         if(file.startsWith('microservices/services/')){
+//             result = "${result}${file},"
+//         }
+//     }
+//     def arr_comma = result.split(",")
+//     for (int j = 0; j < arr_comma.length; j++) {
+//             def folderDirectory = arr_comma[j].split('/')
+//             for(int z = 0; z < folderDirectory.length; z++){
+//             if(folderDirectory[z] == "services" && z+1 < folderDirectory.length && folderDirectory[z+1] != ".DS_Store"){
+//                 tempResult = "${tempResult}${folderDirectory[z+1]} "
+//                 break
+//             }
+//         }
+//     }
 
-    def resultS = tempResult.tokenize(' ')
-    resultS = resultS.unique()
-    for(int i = 0; i < resultS.size(); i++){
-        folders="${folders}${resultS[i]},"
-    }
-    echo "modified: ${folders}"
-    env.folders =  "${folders}"
-}
+//     def resultS = tempResult.tokenize(' ')
+//     resultS = resultS.unique()
+//     for(int i = 0; i < resultS.size(); i++){
+//         folders="${folders}${resultS[i]},"
+//     }
+//     echo "modified: ${folders}"
+//     env.folders =  "${folders}"
+// }
 
 pipeline{
     
@@ -225,8 +225,9 @@ pipeline{
                     try{
                         if("${MODIFIED_SERVICE}" != '' ){
                             dir("./microservices"){
-                                flag = "edit"
-                                sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
+                                // flag = "edit"
+                                // sh "bash helper_hardcode.sh ${MODIFIED_SERVICE} ${flag}" 
+                                sh "bash update_containers.sh ${MODIFIED_SERVICE} 4"
                             }
                         }
                     }catch(Exception e){
@@ -243,8 +244,10 @@ pipeline{
                     try{
                         if("${NEW_SERVICE}" != ''){
                             dir("./microservices"){
-                                flag_new = "new"
-                                sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
+                                // flag_new = "new"
+                                // sh "bash helper_hardcode.sh ${NEW_SERVICE} ${flag_new}" 
+                                sh "bash add_newservice.sh ${NEW_SERVICE}"
+                                sh "bash update_containers.sh ${NEW_SERVICE} 4"
                             }
                         }
                     }catch(Exception e){
