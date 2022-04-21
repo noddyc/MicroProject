@@ -1,8 +1,10 @@
 const fs = require('fs');
 
+let i = process.argv[2]
+
 var users_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         username: "username_" + n,
@@ -14,7 +16,7 @@ for (n; n < 100000; n++) {
 
 var threads_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         title: "title_" + n,
@@ -25,7 +27,7 @@ for (n; n < 100000; n++) {
 
 var posts_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         thread: "thread_" + n,
@@ -37,7 +39,7 @@ for (n; n < 100000; n++) {
 
 var comments_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         post: n,
         text: "text_" + n,

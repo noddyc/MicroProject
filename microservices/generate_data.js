@@ -1,8 +1,10 @@
 const fs = require('fs');
 
+let i = process.argv[2]
+
 var users_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         username: "username_" + n,
@@ -17,7 +19,7 @@ fs.writeFileSync('services/users/db.json', json_data);
 
 var threads_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         title: "title_" + n,
@@ -31,7 +33,7 @@ fs.writeFileSync('services/threads/db.json', json_data);
 
 var posts_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         id: n,
         thread: "thread_" + n,
@@ -46,7 +48,7 @@ fs.writeFileSync('services/posts/db.json', json_data);
 
 var comments_data = [];
 var n = 0; 
-for (n; n < 100000; n++) {
+for (n; n < i; n++) {
     var obj = {
         post: n,
         text: "text_" + n,

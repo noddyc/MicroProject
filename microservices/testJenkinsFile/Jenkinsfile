@@ -1,0 +1,110 @@
+pipeline{
+    
+    agent any
+    environment{
+        dockerImage = ''
+        directory = './microservices/services/'
+        registry = 'jh7939/microservices:'
+        registry_mono = 'jh7939/monolithic:monolithic-app'
+        registryCredential = 'dockerhub_id'
+    }
+    
+    stages{
+        stage("Initialization") {
+            steps {
+                buildName "${BUILD_NAME}"
+            }
+        }
+        stage('Checkout'){
+            steps{
+                script{
+                    sh 'git fetch --all'
+                    if("${MODIFIED_SERVICE}" != ''){
+                        sh "git checkout origin/master -- ./microservices/haproxy/"
+                        sh "git checkout origin/master -- ./microservices/docker-compose.yml"
+                        sh "git checkout origin/master -- ./microservices/services/${MODIFIED_SERVICE}/"
+                    }
+                    if("${NEW_SERVICE}" != ''){
+                        sh "git checkout origin/master -- ./microservices/services/${NEW_SERVICE}/"
+                    }
+                }
+            }
+        }
+        stage('Microservice Build and upload Docker image(add)'){
+            steps{
+                script{
+                    if("${NEW_SERVICE}" != ''){
+                        try{
+                            dir("${directory}${NEW_SERVICE}"){
+                                dockerName = "${registry}${NEW_SERVICE}_microservice"
+                                dockerImage = docker.build dockerName
+                                docker.withRegistry('', registryCredential){
+                                    dockerImage.push()
+                                    }
+                            }
+                        } catch(Exception e){
+                            echo "Microservice Build and upload Docker image(add) failed"
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Microservice Build and upload Docker image(modified)'){
+            steps{
+                script{
+                    if("${MODIFIED_SERVICE}" != ''){
+                        try{
+                            dir("${directory}${MODIFIED_SERVICE}"){
+                                dockerName = "${registry}${MODIFIED_SERVICE}_microservice"
+                                dockerImage = docker.build dockerName
+                                docker.withRegistry('', registryCredential){
+                                    dockerImage.push()
+                                    }
+                            }
+                        }catch(Exception e){
+                            echo "Microservice Build and upload Docker image(modified) failed"
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Microservice task (modified)'){
+            steps{
+                script{
+                    try{
+                        if("${MODIFIED_SERVICE}" != '' ){
+                            dir("./microservices"){
+                                sh "bash update_containers.sh ${MODIFIED_SERVICE} 4"
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (modified) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+
+        stage('Microservice task (add)'){
+            steps{
+                script{
+                    try{
+                        if("${NEW_SERVICE}" != ''){
+                            dir("./microservices"){
+                                sh "bash add_newservice.sh ${NEW_SERVICE}"
+                                sh "bash update_containers.sh ${NEW_SERVICE} 4"
+                            }
+                        }
+                    }catch(Exception e){
+                            echo "Microservice task (add) failed"
+                            currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+    }
+}
